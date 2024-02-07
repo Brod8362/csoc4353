@@ -1,0 +1,49 @@
+@startuml
+
+[Web browser] as browser
+[HTML] as html
+[JavaScript] as js
+[CSS] as css
+
+package "Frontend" {
+	package "Modules" {
+		[Login form] as login_form
+		[Registration form] as registration_form
+		[Profile managemenet form] as profile_form
+		[Fuel quote form] as quote_form
+		[Fuel quote history] as quote_history
+	}
+}
+
+package "Backend" {
+	[Rust API backend] as backend
+
+	package "Components" {
+		[Authentication manager] as auth_manager
+		[Profile manager] as profile_manager
+		[Pricing module] as pricing_module
+	}
+}
+
+package "Database" {
+	[SQLite RDBMS] as database
+}
+
+browser -d-> Frontend
+html -u-> browser
+css -u-> browser
+js -u-> browser
+
+backend --> database
+js --> backend
+backend <--> auth_manager
+backend <--> profile_manager
+backend <--> pricing_module
+
+login_form -d-> auth_manager
+registration_form -d-> auth_manager
+profile_form -d-> profile_manager
+quote_form -d-> pricing_module
+quote_history -d-> pricing_module
+
+@enduml
