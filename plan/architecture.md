@@ -4,7 +4,7 @@
 
 # High-level desgin/architecture
 1. **Frontend Components**
-   - **User Interface:** Frontend will consist several forms and tables containing information from the back-end database.
+   - **User Interface:** Frontend will consist of several forms and tables containing information from the back-end database.
    - **Login/Register Pages:** These pages will allow the user to either log-in with their saved credentials or register if they are new users.
    - **Profile Management Page:** Users will be able to update their profile information after logging in.
    - **Fuel Quote Form:** This form will collect information such as client location, client history, gallons requested, and company profit margin.
@@ -13,7 +13,7 @@
    - **Authentication Service:** This service will handle user authentication and authorization, including login and registration functionality.
    - **Database:** Will store user data, including client profiles and fuel quote history.
    - **Fuel Quote Calculations:** Program responsible for calculationg fuel rates based on the provided criteria.
-   - **Profile Managment:** Manages client profiles, including client registration, and updating existing users.
+   - **Profile Management:** Manages client profiles, including client registration, and updating existing users.
 3. **Integration**
    - **APIs:** Backend services will expose APIs for communication with the frontend.
    - **Data Flow:** User inputs from the frontend will be sent to the backend, processed, and the results will be sent back to the frontend for display.
