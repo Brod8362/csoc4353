@@ -2,7 +2,7 @@
 
 # Development Methodology
 
-# High-level desgin/architecture
+# High-level design/architecture
 1. **Frontend Components**
    - **User Interface:** Frontend will consist of several forms and tables containing information from the back-end database.
    - **Login/Register Pages:** These pages will allow the user to either log-in with their saved credentials or register if they are new users.
