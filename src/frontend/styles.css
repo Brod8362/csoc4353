@@ -1,5 +1,6 @@
 header{
     border-bottom: 2px solid black;
+    
 }
 
 footer{
@@ -17,5 +18,32 @@ footer{
 
 h1{
     font-size: 20px;
+}
+
+#account{
+    float: right;
+    margin: 10px;
+
+}
+
+/* MENU HEADER */
+ul{
+    list-style-type: none;
+    margin: 0;
+    padding: 0px;
+    overflow:hidden;
+    background-color: #313638; 
+}
+li{
+    float: left;
+}
+li a{
+    display: block;
+    color: white;   /* change this to text palette color */
+    text-align: center;
+    padding: 14px 16px;
+}
+li a:hover{
+    background-color: #0e0705; 
 }
 
