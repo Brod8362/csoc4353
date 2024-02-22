@@ -7,7 +7,7 @@ footer{
     border-top: 2px solid black;
 }
 
-#content{
+#info{
     background-color: white;
     padding: 1px 10px 10px 10px;
     border-left: 2px solid black;
@@ -17,7 +17,11 @@ footer{
 }
 
 h1{
-    font-size: 20px;
+    font-size: 23px;
+}
+
+#info h2{
+    font-size: 18px;
 }
 
 #account{
