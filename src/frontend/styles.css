@@ -2,19 +2,20 @@
 	/* name the colors*/
 	--light_yellow: #ffe596;
 	--light_black: #313638;
+	--light_cream: #e7d99c;
 }
 header{
+    color: white;
     border-bottom: 2px solid black;
 }
 body{
     min-height: 100vh;
     flex-direction: column;
     display: flex;
-    background-color: var(--light_yellow);
+    background-color: var(--light_black);
 }
 
 footer{
-    border-top: 2px solid black;
     margin-top: auto;
 }
 
@@ -24,7 +25,7 @@ footer{
     /*object-position: */
 }
 #info{
-    background-color: white;
+    background-color: var(--light_cream);
     padding: 1px 10px 10px 10px;
     border-left: 2px solid black;
     border-right: 2px solid black;
@@ -72,12 +73,15 @@ li a:hover{
 	height: 50%;
 	width: 100%;
 	top: 0;
-	padding: 70px;
+	/*padding: 70px;*/
 }
-#bottom_half {
-	background-color: red;
+footer {
+	background-image: url(desert_star.png);
 	height: 50%;
 	width: 100%;
 	bottom: 0;
 	position: absolute;
+	background-repeat:no-repeat;
+        background-size: cover;
 }
+
