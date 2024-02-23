@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Login</title>
+        <style>
+            .form-sect{
+                display: flex;
+                align-items: center;
+            }
+        </style>
+    </head>
+    <body>
+        <div>
+            <h1>Welcome!</h1>
+            <p>Please login or register to continue.</p>
+            <form hx-post="/login" hx-target="#login-form">
+                
+                <section class="form-sect">
+                    <img src="dummy.png" alt="person icon">
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" name="username" required>
+                </section>
+
+                <br>
+                <section class="form-sect">
+                    <img src="dummy.png" alt="key icon">
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" name="password" required>
+                </section>
+
+
+                <br>
+                <button type="submit" hx-get="/login" hx-trigger="click" hx-target="#login-form">
+                    <section class="form-sect">
+                        <img src="dummy.png" alt="arrow icon ">
+                        <span>Login</span>
+                    </section>
+                </button>
+                <button type="submit" hx-get="/register" hx-trigger="click" hx-target="#login-form">
+                    <section class="form-sect">
+                        <img src="dummy.png" alt="pencil icon">
+                        <span>Register</span>
+                    </section>
+                </button>
+            </form>
+        </div>
+    </body>
+</html>
