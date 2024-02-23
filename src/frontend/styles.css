@@ -1,0 +1,63 @@
+header{
+    border-bottom: 2px solid black;
+}
+body{
+    min-height: 100vh;
+    flex-direction: column;
+    display: flex;
+}
+
+footer{
+    border-top: 2px solid black;
+    margin-top: auto;
+}
+
+#logo{
+    width: 50px;
+    height: 50px;
+    /*object-position: */
+}
+#info{
+    background-color: white;
+    padding: 1px 10px 10px 10px;
+    border-left: 2px solid black;
+    border-right: 2px solid black;
+    margin-left: 100px;
+    margin-right: 100px;
+}
+
+h1{
+    font-size: 23px;
+}
+
+#info h2{
+    font-size: 18px;
+}
+
+#account{
+    float: right;
+    margin: 10px;
+
+}
+
+/* MENU HEADER */
+ul{
+    list-style-type: none;
+    margin: 0;
+    padding: 0px;
+    overflow:hidden;
+    background-color: #313638; 
+}
+li{
+    float: left;
+}
+li a{
+    display: block;
+    color: white;   /* change this to text palette color */
+    text-align: center;
+    padding: 14px 16px;
+}
+li a:hover{
+    background-color: #0e0705; 
+}
+
