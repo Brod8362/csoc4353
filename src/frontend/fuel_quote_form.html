@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<head>
+    <title>Fuel Quote Form</title>
+    <style>
+        .form-sect{
+            display: flex;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>Fuel Quote Form</h1>
+    <p>Fill out the form below for fuel quote form information.</p>
+
+    <form hx-post="/fuel_quote" hx-target="#fuel-quote-form">
+        <section class="form-sect">
+            <img src="dummy.png" alt="fuel icon">            
+            <label for="gallons_requested">Gallons Requested:</label>
+            <input type="number" id="gallons_requested" name="gallons_requested" required>
+            <p>gal</p>
+        </section>
+
+        <br>
+        <table>
+            <!--Delivery Addresses aren uneditable and come from client information-->
+            <caption>Delivery Address</caption>
+            <tr>
+                <td>
+                    <section class="form-sect">
+                        <img src="dummy.png" alt="house icon">
+                        <input type="radio" id="address1" name="address" value="address1" checked>
+                        <label for="address1">
+                            Address 1:<br>
+                            5113 Rainflower Circle S<br>
+                            League City, TX 77573
+                        </label>
+                    </section>
+                </td>
+                <td>
+                    <section class="form-sect">
+                        <img src="dummy.png" alt="house icon">
+                        <input type="radio" id="address2" name="address" value="address2">
+                        <label for="address2">
+                            Address 2:<br>
+                            5113 Rainflower Circle S<br>
+                            League City, TX 77573
+                        </label>
+                    </section>
+                </td>   
+            </tr>
+        </table>
+
+        <br>
+        <section class="form-sect">
+            <img src="dummy.png" alt="calendar icon">
+            <label for="delivery_date">Delivery Date:</label>
+            <input type="date" id="delivery_date" name="delivery_date" required>
+        </section>
+
+        <br>
+        <section class="form-sect">
+            <img src="dummy.png" alt="money icon">
+            <p>Price per Gallon: 2.50 USD</p>
+            <!-- price is a noneditable numeric value calculated by pricing module-->
+        </section>
+
+        <br>
+        <section class="form-sect">
+            <img src="dummy.png" alt="money icon">
+            <p>Total Amount Due: 0.00 USD</p>
+            <!-- total is a noneditable numeric value calculated (gallons * price per gallon)-->
+        </section>
+
+        <br>
+        <button type="submit" hx-get="/fuel_quote" hx-trigger="click" hx-target="#fuel-quote-form">
+            <section class="form-sect">
+                <img src="dummy.png" alt="checkmark icon">
+                <span>Get Quote</span>
+            </section>
+    </form>
+</body>
