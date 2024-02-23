@@ -15,9 +15,6 @@ body{
     background-color: var(--light_black);
 }
 
-footer{
-    margin-top: auto;
-}
 
 #logo{
     width: 50px;
@@ -76,7 +73,7 @@ li a:hover{
 	top: 0;
 	/*padding: 70px;*/
 }
-footer {
+#bottom_half {
 	background-image: url(desert_star.png);
 	height: 50%;
 	width: 100%;
