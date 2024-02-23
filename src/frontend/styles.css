@@ -1,16 +1,20 @@
+:root {
+	/* name the colors*/
+	--light_yellow: #ffe596;
+	--light_black: #313638;
+	--light_cream: #e7d99c;
+}
 header{
+    color: white;
     border-bottom: 2px solid black;
 }
 body{
     min-height: 100vh;
     flex-direction: column;
     display: flex;
+    background-color: var(--light_black);
 }
 
-footer{
-    border-top: 2px solid black;
-    margin-top: auto;
-}
 
 #logo{
     width: 50px;
@@ -18,7 +22,7 @@ footer{
     /*object-position: */
 }
 #info{
-    background-color: white;
+    background-color: var(--light_cream);
     padding: 1px 10px 10px 10px;
     border-left: 2px solid black;
     border-right: 2px solid black;
@@ -37,6 +41,7 @@ h1{
 #account{
     float: right;
     margin: 10px;
+    color: white;
 
 }
 
@@ -46,7 +51,7 @@ ul{
     margin: 0;
     padding: 0px;
     overflow:hidden;
-    background-color: #313638; 
+    background-color: var(--light_black); 
 }
 li{
     float: left;
@@ -59,5 +64,22 @@ li a{
 }
 li a:hover{
     background-color: #0e0705; 
+}
+#top_half {
+	background-image: url(starry_sky.png);
+	background-repeat: repeat;
+	height: 50%;
+	width: 100%;
+	top: 0;
+	/*padding: 70px;*/
+}
+#bottom_half {
+	background-image: url(desert_star.png);
+	height: 70%;
+	width: 100%;
+	bottom: 0;
+	position: absolute;
+	background-repeat:no-repeat;
+        background-size: cover;
 }
 
