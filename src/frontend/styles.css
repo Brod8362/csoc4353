@@ -1,3 +1,8 @@
+:root {
+	/* name the colors*/
+	--light_yellow: #ffe596;
+	--light_black: #313638;
+}
 header{
     border-bottom: 2px solid black;
 }
@@ -5,6 +10,7 @@ body{
     min-height: 100vh;
     flex-direction: column;
     display: flex;
+    background-color: var(--light_yellow);
 }
 
 footer{
@@ -46,7 +52,7 @@ ul{
     margin: 0;
     padding: 0px;
     overflow:hidden;
-    background-color: #313638; 
+    background-color: var(--light_black); 
 }
 li{
     float: left;
@@ -60,4 +66,18 @@ li a{
 li a:hover{
     background-color: #0e0705; 
 }
-
+#top_half {
+	background-image: url(starry_sky.png);
+	background-repeat: repeat;
+	height: 50%;
+	width: 100%;
+	top: 0;
+	padding: 70px;
+}
+#bottom_half {
+	background-color: red;
+	height: 50%;
+	width: 100%;
+	bottom: 0;
+	position: absolute;
+}
