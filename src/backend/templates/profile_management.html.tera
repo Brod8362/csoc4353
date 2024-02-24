@@ -4,7 +4,7 @@
 
     <form hx-post="/update_profile" hx-target="#profile-form">
         <section class="form-sect">
-            <img src="dummy.png" alt="person icon">
+            <img src="/static/dummy.png" alt="person icon">
             <label for="full_name">Full Name:</label>
             <input type="text" id="full_name" name="full_name" maxlength="50" required>
         </section>
@@ -14,14 +14,14 @@
             <tr>
                 <td>
                     <section class="form-sect">
-                        <img src="dummy.png" alt="house icon">
+                        <img src="/static/dummy.png" alt="house icon">
                         <label for="address_1">Address 1:</label>
                         <textarea id="address_1" name="address_1" rows="2" cols="20" maxlength="100" required></textarea>
                     </section>
                 </td>
                 <td>
                     <section class="form-sect">
-                        <img src="dummy.png" alt="house icon">
+                        <img src="/static/dummy.png" alt="house icon">
                         <label for="address_2">Address 2: <br> (optional)</label>
                         <textarea id="address_2" name="address_2" rows="2" cols="20" maxlength="100"></textarea>
                     </section>
@@ -29,14 +29,14 @@
             <tr>
                 <td>
                     <section class="form-sect">
-                        <img src="dummy.png" alt="city icon">
+                        <img src="/static/dummy.png" alt="city icon">
                         <label for="city_1">City:</label>
                         <input type="text" id="city_1" name="city_1" maxlength="100" required>
                     </section>
                 </td>
                 <td>
                     <section class="form-sect">
-                        <img src="dummy.png" alt="city icon">
+                        <img src="/static/dummy.png" alt="city icon">
                         <label for="city_2">City:</label>
                         <input type="text" id="city_2" name="city_2" maxlength="100">
                 </td>
@@ -44,7 +44,7 @@
             <tr>
                 <td>
                     <section class="form-sect">
-                        <img src="dummy.png" alt="state icon">
+                        <img src="/static/dummy.png" alt="state icon">
                         <label for="state_1">State:</label>
                         <select id="state_1" name="state_1" required>
                             <option value="">Select a State</option>
@@ -102,7 +102,7 @@
                 </td>
                 <td>
                     <section class="form-sect">
-                        <img src="dummy.png" alt="state icon">
+                        <img src="/static/dummy.png" alt="state icon">
                         <label for="state_2">State:</label>
                         <select id="state_2" name="state_2">
                             <option value="">Select a State</option>
@@ -162,14 +162,14 @@
             <tr>
                 <td>
                     <section class="form-sect">
-                        <img src="dummy.png" alt="zip code icon">
+                        <img src="/static/dummy.png" alt="zip code icon">
                         <label for="zip_code_1">Zip Code:</label>
                         <input type="text" id="zip_code_1" name="zip_code_1" maxlength="9" minlength="5" required>
                     </section>
                 </td>
                 <td>
                     <section class="form-sect">
-                        <img src="dummy.png" alt="zip code icon">
+                        <img src="/static/dummy.png" alt="zip code icon">
                         <label for="zip_code_2">Zip Code:</label>
                         <input type="text" id="zip_code_2" name="zip_code_2" maxlength="9" minlength="5">
                 </td>
@@ -179,7 +179,7 @@
         <br>
         <button type="submit" hx-get="/update_profile" hx-trigger="click" hx-target="#profile-form">
             <section class="form-sect">
-                <img src="dummy.png" alt="checkmark icon">
+                <img src="/static/dummy.png" alt="checkmark icon">
                 <span>Submit</span>
             </section>
     </form>
