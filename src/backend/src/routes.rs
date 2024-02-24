@@ -4,7 +4,7 @@ use rocket_dyn_templates::{context, Template};
 #[get("/")]
 pub fn index() -> Template {
     Template::render(
-        "placeholder", 
+        "home", 
         context!{
             
         }
@@ -14,7 +14,7 @@ pub fn index() -> Template {
 #[get("/login")]
 pub fn login() -> Template {
     Template::render(
-        "placeholder", 
+        "login_page", 
         context!{
             
         }
@@ -24,7 +24,7 @@ pub fn login() -> Template {
 #[get("/register")]
 pub fn register() -> Template {
     Template::render(
-        "placeholder", 
+        "login_page", 
         context!{
             
         }
@@ -34,7 +34,7 @@ pub fn register() -> Template {
 #[get("/page/profile")]
 pub fn profile() -> Template {
     Template::render(
-        "placeholder", 
+        "profile_management", 
         context!{
             
         }
@@ -44,9 +44,20 @@ pub fn profile() -> Template {
 #[get("/page/quote")]
 pub fn quote() -> Template {
     Template::render(
-        "placeholder", 
+        "fuel_quote_form", 
         context!{
             
         }
     )
 }
+
+#[get("/page/quote_history")]
+pub fn quote_history() -> Template {
+    Template::render(
+        "fuel_quote_history", 
+        context!{
+            
+        }
+    )
+}
+

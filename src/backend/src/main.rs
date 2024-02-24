@@ -1,3 +1,4 @@
+use rocket::fs::FileServer;
 use rocket_dyn_templates::Template;
 
 #[macro_use] extern crate rocket;
@@ -17,4 +18,5 @@ fn rocket() -> _ {
                 routes::quote
             ]
         )
+        .mount("/static", FileServer::from("./static"))
 }
