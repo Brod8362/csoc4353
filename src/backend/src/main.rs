@@ -15,7 +15,8 @@ fn rocket() -> _ {
                 routes::index,
                 routes::login,
                 routes::profile,
-                routes::quote
+                routes::quote,
+                routes::quote_history
             ]
         )
         .mount("/static", FileServer::from("./static"))
