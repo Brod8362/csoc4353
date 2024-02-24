@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<meta charset="UTF-8">
+<html lang="en">
+<head>
+    <title>North Sentinel Oil and Gas</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <script src="/static/htmx.min.js"></script>
+</head>
+
+<header>
+    
+    <h1>Hello, [person]</h1>
+    <!--<img id="logo" src="placeholder.png" alt="logo">  FIND OUT HOW TO MOVE THIS -->
+    
+
+    <a id="account" hx-get="/login" hx-swap="innerHTML" hx-target="#content">Login / Register</a> 
+
+    <ul>
+        <li><a href="#home">Home</a></li>
+        <li><a hx-get="/page/quote_history" hx-swap="innerHTML" hx-target="#content">Fuel Quote History</a></li>
+        <li><a hx-get="/page/quote" hx-swap="innerHTML" hx-target="#content">Generate Fuel Quote</a></li>
+        <li><a hx-get="/page/profile" hx-swap="innerHTML" hx-target="#content">Profile</a></li>
+    </ul>
+</header>
+
+<body>
+    <div id="bottom_half">	
+        <div id="content">
+            
+        </div>
+    </div>
+</body>
+
+</html>

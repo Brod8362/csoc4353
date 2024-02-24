@@ -1,17 +1,4 @@
-<!DOCTYPE html>
-<head>
-    <title>Fuel Quote History</title>
-    <style>
-        .form-sect{
-            display: flex;
-            align-items: center;
-        }
-        td{
-            text-align: center;
-        }
-    </style>
-</head>
-<body>
+<div>
     <h1>Fuel Quote History</h1>
     <p>View your fuel quote history below.</p>
 
@@ -20,37 +7,37 @@
         <tr>
             <td>
                 <section class="form-sect">
-                    <img src="dummy.png" alt="calendar icon">
+                    <img src="/static/dummy.png" alt="calendar icon">
                     Date
                 </section>
             </td>
             <td>
                 <section class="form-sect">
-                    <img src="dummy.png" alt="fuel icon">
+                    <img src="/static/dummy.png" alt="fuel icon">
                     Gallons Requested
                 </section>
             </td>
             <td>
                 <section class="form-sect">
-                    <img src="dummy.png" alt="house icon">
+                    <img src="/static/dummy.png" alt="house icon">
                     Delivery Address
                 </section>
             </td>
             <td>
                 <section class="form-sect">
-                    <img src="dummy.png" alt="truck icon">
+                    <img src="/static/dummy.png" alt="truck icon">
                     Delivery Date
                 </section>
             </td>
             <td>
                 <section class="form-sect">
-                    <img src="dummy.png" alt="money icon">
+                    <img src="/static/dummy.png" alt="money icon">
                     Price Per Gallon
                 </section>
             </td>
             <td>
                 <section class="form-sect">
-                    <img src="dummy.png" alt="money icon">
+                    <img src="/static/dummy.png" alt="money icon">
                     Total Amount Due
                 </section>
             </td>
@@ -80,4 +67,4 @@
             <td>200.00</td>
         </tr>
     </table>
-</body>
+</div>
