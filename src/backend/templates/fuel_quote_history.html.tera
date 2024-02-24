@@ -1,17 +1,4 @@
-<!DOCTYPE html>
-<head>
-    <title>Fuel Quote History</title>
-    <style>
-        .form-sect{
-            display: flex;
-            align-items: center;
-        }
-        td{
-            text-align: center;
-        }
-    </style>
-</head>
-<body>
+<div>
     <h1>Fuel Quote History</h1>
     <p>View your fuel quote history below.</p>
 
@@ -80,4 +67,4 @@
             <td>200.00</td>
         </tr>
     </table>
-</body>
+</div>

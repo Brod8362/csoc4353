@@ -1,14 +1,5 @@
-<!DOCTYPE html>
-<head>
-    <title>Fuel Quote Form</title>
-    <style>
-        .form-sect{
-            display: flex;
-            align-items: center;
-        }
-    </style>
-</head>
-<body>
+
+<div>
     <h1>Fuel Quote Form</h1>
     <p>Fill out the form below for fuel quote form information.</p>
 
@@ -78,4 +69,4 @@
                 <span>Get Quote</span>
             </section>
     </form>
-</body>
+</div>
