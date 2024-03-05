@@ -99,6 +99,7 @@ pub async fn register_user(pool: &Pool<Sqlite>, username: &str, password: &str) 
     Ok(user_id.to_owned())
 }
 
+
 pub async fn authenticate_user(pool: &Pool<Sqlite>, username: &str, password: &str) -> Result<(), Box<dyn Error>> {
     let rs_maybe = sqlx::query("SELECT password_hash, password_salt FROM auth WHERE username = ?")
         .bind(username)

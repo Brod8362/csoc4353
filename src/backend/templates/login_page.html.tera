@@ -12,7 +12,7 @@
         <div>
             <h1>Welcome!</h1>
             <p>Please login or register to continue.</p>
-            <form hx-post="/login" hx-target="#login-form">
+            <form hx-post="/login" hx-target="#content">
                 
                 <section class="form-sect">
                     <img src="/static/dummy.png" alt="person icon">
@@ -27,15 +27,26 @@
                     <input type="password" id="password" name="password" required>
                 </section>
 
+                {% if error %}
+                <div class="error" style="color:red;">
+                    <p>{{error}}</p>
+                </div>
+                {% endif %}
+
+                {% if message %}
+                <div class="message">
+                    <p>{{message}}</p>
+                </div>
+                {% endif %}
 
                 <br>
-                <button type="submit" hx-get="/login" hx-trigger="click" hx-target="#login-form">
+                <button type="submit">
                     <section class="form-sect">
                         <img src="/static/dummy.png" alt="arrow icon ">
                         <span>Login</span>
                     </section>
                 </button>
-                <button type="submit" hx-get="/register" hx-trigger="click" hx-target="#login-form">
+                <button type="submit" hx-post="/register">
                     <section class="form-sect">
                         <img src="/static/dummy.png" alt="pencil icon">
                         <span>Register</span>

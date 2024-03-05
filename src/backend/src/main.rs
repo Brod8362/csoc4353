@@ -5,6 +5,8 @@ use rocket_dyn_templates::Template;
 pub mod routes;
 pub mod database;
 pub mod config;
+pub mod autoauth;
+pub mod jwt;
 
 
 #[launch]
@@ -23,7 +25,10 @@ async fn rocket() -> _ {
             "/", 
             routes![
                 routes::index,
-                routes::login,
+                routes::login_page,
+                routes::login_request,
+                routes::register_request,
+                routes::logout,
                 routes::profile,
                 routes::quote,
                 routes::quote_history
