@@ -3,7 +3,6 @@ use std::{error::Error, num::NonZeroU32};
 use ring::{digest, pbkdf2::{self, Algorithm}, rand::{self, SecureRandom}};
 use rocket::futures;
 use sqlx::{sqlite::SqlitePoolOptions, Executor, Pool, Row, Sqlite};
-use futures::TryStreamExt;
 use thiserror::Error;
 
 const CREDENTIAL_LEN: usize = digest::SHA512_OUTPUT_LEN;
