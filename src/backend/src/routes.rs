@@ -10,17 +10,26 @@ use sqlx::Pool;
 use sqlx::Sqlite;
 
 use crate::autoauth::UserContext;
+use crate::config::AppConfig;
 use crate::database;
 
 
 #[get("/")]
-pub fn index() -> Template {
-    Template::render(
-        "home", 
-        context!{
-            
-        }
-    )
+pub fn index(ctx: &UserContext) -> Template {
+    if let Some(user_id) = &ctx.0 {
+        Template::render(
+            "home", 
+            context!{
+                user: user_id
+            }
+        )
+    } else {
+        Template::render(
+            "home", 
+            context!{}
+        )
+    }
+
 }
 
 #[get("/login")]
@@ -39,7 +48,7 @@ pub struct AuthRequest {
 }
 
 #[post("/login", data = "<form>")]
-pub async fn login_request(pool: &State<Pool<Sqlite>>, cookies: &CookieJar<'_>, form: Form<AuthRequest>) -> Template {
+pub async fn login_request(pool: &State<Pool<Sqlite>>, cookies: &CookieJar<'_>, appconf: &State<AppConfig>, form: Form<AuthRequest>) -> Template {
     let auth_result = database::authenticate_user(pool, &form.username, &form.password).await;
     if auth_result.is_err() {
         let error_message = format!("{:?}", auth_result.err().unwrap());
@@ -54,7 +63,7 @@ pub async fn login_request(pool: &State<Pool<Sqlite>>, cookies: &CookieJar<'_>, 
     //auth must have been successful at this point
     //generate jwt and send to client
     let duration = Duration::from_secs(60*60*24); //tokens good for 24 hours
-    let secret = b"test"; //TODO
+    let secret = &appconf.secret_as_bytes(); //TODO
     let token = crate::jwt::generate_jwt(&form.username, duration, secret);
     cookies.add(("Authorization", token));
 

@@ -17,8 +17,8 @@ pub fn generate_jwt(user_id: &str, duration: Duration, secret: &[u8]) -> String 
     claims.sign_with_key(&key).unwrap()
 }
 
-pub fn validate_jwt(token: &str) -> Option<String> {
-    let key: Hmac<Sha256> = Hmac::new_from_slice(b"secret").unwrap();
+pub fn validate_jwt(token: &str, secret: &[u8]) -> Option<String> {
+    let key: Hmac<Sha256> = Hmac::new_from_slice(secret).unwrap();
 
     let claims: BTreeMap<String, String> = match token.verify_with_key(&key) {
         Ok(b) => b,
@@ -47,9 +47,9 @@ pub fn validate_jwt(token: &str) -> Option<String> {
     None
 }
 
-pub fn validate_from_cookie(cookies: &CookieJar<'_>) -> Option<String> {
+pub fn validate_from_cookie(cookies: &CookieJar<'_>, secret: &[u8]) -> Option<String> {
     match cookies.get("Authorization") {
-        Some(cookie) => validate_jwt(cookie.value()),
+        Some(cookie) => validate_jwt(cookie.value(), secret),
         None => None
     }
 }

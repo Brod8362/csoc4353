@@ -36,4 +36,5 @@ async fn rocket() -> _ {
         )
         .mount("/static", FileServer::from("./static"))
         .manage(database)
+        .manage(app_config)
 }

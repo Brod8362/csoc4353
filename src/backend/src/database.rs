@@ -1,7 +1,7 @@
 use std::{error::Error, num::NonZeroU32};
 
 use ring::{digest, pbkdf2::{self, Algorithm}, rand::{self, SecureRandom}};
-use rocket::futures;
+use uuid::Uuid;
 use sqlx::{sqlite::SqlitePoolOptions, Executor, Pool, Row, Sqlite};
 use thiserror::Error;
 
@@ -87,16 +87,16 @@ pub async fn register_user(pool: &Pool<Sqlite>, username: &str, password: &str) 
     let vec_hash = Vec::from(hash);
     let vec_salt = Vec::from(salt);
 
-    let user_id = "asd"; //TODO generate uuid here!!
+    let user_id = Uuid::new_v4().to_string();
     sqlx::query("INSERT INTO auth VALUES(?, ?, ?, ?)")
-        .bind(user_id)
+        .bind(&user_id)
         .bind(username)
         .bind(vec_hash)
         .bind(vec_salt)
         .execute(pool)
         .await?;
 
-    Ok(user_id.to_owned())
+    Ok(user_id)
 }
 
 
@@ -131,17 +131,14 @@ pub async fn authenticate_user(pool: &Pool<Sqlite>, username: &str, password: &s
 
 mod tests {
     use rocket::tokio;
-
-    use super::init_connection;
-
     #[tokio::test]
     pub async fn test_init_database() {
-        let _: sqlx::Pool<sqlx::Sqlite> = init_connection("sqlite://:memory:", 1).await.unwrap();
+        let _: sqlx::Pool<sqlx::Sqlite> = crate::database::init_connection("sqlite://:memory:", 1).await.unwrap();
     }
 
     #[tokio::test]
     pub async fn test_create_user() {
-        let pool = init_connection("sqlite://:memory:", 1).await.unwrap();
+        let pool = crate::database::init_connection("sqlite://:memory:", 1).await.unwrap();
         let username = "test";
         let password = "test";
 
@@ -157,7 +154,7 @@ mod tests {
 
     #[tokio::test]
     pub async fn test_authenticate_user() {
-        let pool = init_connection("sqlite://:memory:", 1).await.unwrap();
+        let pool = crate::database::init_connection("sqlite://:memory:", 1).await.unwrap();
 
         let create_user_res = crate::database::register_user(&pool, "test", "password").await;
         assert!(create_user_res.is_ok());
