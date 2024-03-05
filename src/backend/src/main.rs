@@ -1,6 +1,3 @@
-
-use std::error::Error;
-
 use rocket::fs::FileServer;
 use rocket_dyn_templates::Template;
 

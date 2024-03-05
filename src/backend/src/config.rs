@@ -1,4 +1,4 @@
-use std::{error::Error, fs, path::Path};
+use std::{error::Error, fs};
 
 use rocket::figment::providers::{Format, Toml};
 use serde::Deserialize;
