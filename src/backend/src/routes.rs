@@ -133,3 +133,52 @@ pub fn quote_history() -> Template {
     )
 }
 
+#[cfg(test)]
+mod tests {
+    use rocket::{http::{Cookie, CookieJar}, tokio, State};
+
+    use crate::config::AppConfig;
+
+    #[tokio::test]
+    async fn test_user_creation() {
+        let pool = crate::database::init_connection("sqlite://:memory:", 1).await.unwrap();
+        let form = crate::routes::AuthRequest {
+            username: "test".to_string(),
+            password: "test".to_string()
+        };
+        let state = State::from(&pool);
+        //create the user via the request method
+        let _ = crate::routes::register_request(state, form.into()).await;
+
+        // try logging in as the user and make sure it works
+        let r = crate::database::authenticate_user(&pool, "test", "test").await;
+        assert!(r.is_ok())
+    }
+
+    #[tokio::test]
+    async fn test_user_auth() {
+        let pool = crate::database::init_connection("sqlite://:memory:", 1).await.unwrap();
+        let form = crate::routes::AuthRequest {
+            username: "test".to_string(),
+            password: "test".to_string()
+        };
+        let state = State::from(&pool);
+        let _ = crate::routes::register_request(state, form.into()).await;
+
+        let r = crate::database::register_user(&pool, "test", "test").await;
+        assert!(r.is_ok());
+
+        //authenticate via form
+        let appconf = AppConfig {
+            database_uri: "sqlite://:memory:".to_owned(),
+            max_connections: 1,
+            jwt_secret: "test".to_owned()
+        };
+        let form = crate::routes::AuthRequest {
+            username: "test".to_owned(),
+            password: "test".to_owned()
+        };
+        //TODO: need to figure out how to instantiate a CookieJar from scratch and call the correct request method
+        todo!()
+    }
+}
