@@ -1,0 +1,2 @@
+database_uri = "sqlite://database.db"
+max_connections = 1
