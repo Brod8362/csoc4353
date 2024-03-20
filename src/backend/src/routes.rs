@@ -58,7 +58,6 @@ pub async fn login_request(pool: &State<Pool<Sqlite>>, cookies: &CookieJar<'_>, 
                 error: error_message
             }
         )
-
     }
     //auth must have been successful at this point
     //generate jwt and send to client
@@ -123,6 +122,21 @@ pub fn quote() -> Template {
     )
 }
 
+#[derive(FromForm)]
+pub struct QuoteData {
+    gallons: i32,
+    address: String,
+    date: String
+}
+
+#[post:("/quote", data="<form>")]
+pub async fn quote_request(pool: &State<Pool<Sqlite>>, form: Form<QuoteData>) -> Template {
+    let quote_info = database::
+
+    return Template::render
+}
+
+
 #[get("/page/quote_history")]
 pub fn quote_history() -> Template {
     Template::render(
@@ -132,6 +146,8 @@ pub fn quote_history() -> Template {
         }
     )
 }
+
+
 
 #[cfg(test)]
 mod tests {

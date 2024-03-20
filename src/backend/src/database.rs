@@ -128,6 +128,10 @@ pub async fn authenticate_user(pool: &Pool<Sqlite>, username: &str, password: &s
 
 }
 
+pub async fn store_quote(pool: &Pool<Sqlite>, gallons: &i32, address: &str, date: &str) -> Result<String, Box<dyn Error>>{
+    let rs
+}
+
 
 mod tests {
     use rocket::tokio;
