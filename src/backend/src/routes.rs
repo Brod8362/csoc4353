@@ -131,9 +131,20 @@ pub struct QuoteData {
 
 #[post:("/quote", data="<form>")]
 pub async fn quote_request(pool: &State<Pool<Sqlite>>, form: Form<QuoteData>) -> Template {
-    let quote_info = database::
+    let quote_request = database::store_quote(pool, &form.gallons, &form.address, &form.date).await;
 
-    return Template::render
+    //TODO: error handling
+    if quote_info.is_err(){
+        
+    }
+
+    //TODO: have this happen once quote_request is OK
+    Template::render(
+        "fuel_quote_form",
+        context!{
+            message: "Quote data submitted"
+        }
+    )
 }
 
 
