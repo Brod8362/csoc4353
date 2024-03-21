@@ -129,20 +129,23 @@ pub struct QuoteData {
     date: String
 }
 
-#[post:("/quote", data="<form>")]
+#[post("/quote", data="<form>")]
 pub async fn quote_request(pool: &State<Pool<Sqlite>>, form: Form<QuoteData>) -> Template {
-    let quote_request = database::store_quote(pool, &form.gallons, &form.address, &form.date).await;
+    //TODO: handle quote storage inside of the database.rs file
+    //let quote_request = database::store_quote(pool, &form.gallons, &form.address, &form.date).await;
 
     //TODO: error handling
-    if quote_info.is_err(){
+    /*
+    if quote_request.is_err(){
         
     }
+    */
 
     //TODO: have this happen once quote_request is OK
     Template::render(
         "fuel_quote_form",
         context!{
-            message: "Quote data submitted"
+            message: "Fuel quote submitted"
         }
     )
 }
@@ -158,8 +161,18 @@ pub fn quote_history() -> Template {
     )
 }
 
-
-
+#[post("/quote_history", data="<form>")]
+pub async fn quote_display(pool: &State<Pool<Sqlite>>, form: Form<QuoteData>) -> Template{
+    let form_input = form.into_inner();
+    Template:: render(
+        "fuel_quote_history",
+        context!{
+            gallons: form_input.gallons,
+            address: form_input.address,
+            date: form_input.date,
+        }
+    )
+}
 #[cfg(test)]
 mod tests {
     use rocket::{http::{Cookie, CookieJar}, tokio, State};
