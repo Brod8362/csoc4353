@@ -31,8 +31,10 @@ async fn rocket() -> _ {
                 routes::logout,
                 routes::profile,
                 routes::quote,
+                routes::quote_id,
+                routes::quote_request,
                 routes::quote_history,
-                routes::submit_quote
+                routes::submit_quote,
             ]
         )
         .mount("/static", FileServer::from("./static"))

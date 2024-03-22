@@ -122,6 +122,16 @@ pub fn quote() -> Template {
     )
 }
 
+#[get("/page/quote/1")]
+pub fn quote_id() -> Template{
+    Template::render(
+        "fuel_quote",
+        context!{
+            
+        }
+    )
+}
+
 #[derive(FromForm)]
 pub struct QuoteData {
     gallons: String,
@@ -140,7 +150,6 @@ pub async fn quote_request(pool: &State<Pool<Sqlite>>, form: Form<QuoteData>) ->
         
     }
     */
-
     //TODO: have this happen once quote_request is OK
     Template::render(
         "fuel_quote_form",
@@ -149,7 +158,6 @@ pub async fn quote_request(pool: &State<Pool<Sqlite>>, form: Form<QuoteData>) ->
         }
     )
 }
-
 
 #[get("/page/quote_history")]
 pub fn quote_history() -> Template {
@@ -161,7 +169,7 @@ pub fn quote_history() -> Template {
     )
 }
 
-#[post("/page/quote", data="<form>")]
+#[post("/page/quote_history", data="<form>")]
 pub async fn submit_quote(pool: &State<Pool<Sqlite>>, form: Form<QuoteData>) -> Template{
     let form_input = form.into_inner();
     Template:: render(
@@ -173,6 +181,7 @@ pub async fn submit_quote(pool: &State<Pool<Sqlite>>, form: Form<QuoteData>) -> 
         }
     )
 }
+
 #[cfg(test)]
 mod tests {
     use rocket::{http::{Cookie, CookieJar}, tokio, State};
