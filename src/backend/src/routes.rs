@@ -124,12 +124,12 @@ pub fn quote() -> Template {
 
 #[derive(FromForm)]
 pub struct QuoteData {
-    gallons: i32,
+    gallons: String,
     address: String,
     date: String
 }
 
-#[post("/quote", data="<form>")]
+#[post("/page/quote", data="<form>")]
 pub async fn quote_request(pool: &State<Pool<Sqlite>>, form: Form<QuoteData>) -> Template {
     //TODO: handle quote storage inside of the database.rs file
     //let quote_request = database::store_quote(pool, &form.gallons, &form.address, &form.date).await;
@@ -161,8 +161,8 @@ pub fn quote_history() -> Template {
     )
 }
 
-#[post("/quote_history", data="<form>")]
-pub async fn quote_display(pool: &State<Pool<Sqlite>>, form: Form<QuoteData>) -> Template{
+#[post("/page/quote", data="<form>")]
+pub async fn submit_quote(pool: &State<Pool<Sqlite>>, form: Form<QuoteData>) -> Template{
     let form_input = form.into_inner();
     Template:: render(
         "fuel_quote_history",
