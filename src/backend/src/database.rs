@@ -35,6 +35,15 @@ pub async fn init_tables(pool: &Pool<Sqlite>) -> Result<(), sqlx::Error> {
             username TEXT UNIQUE NOT NULL,
             password_hash BLOB NOT NULL,
             password_salt BLOB NOT NULL
+            full_name TEXT NOT NULL,
+            address1 TEXT NOT NULL,
+            city1 TEXT NOT NULL,
+            state1 TEXT NOT NULL,
+            zip1 TEXT NOT NULL,
+            address2 TEXT NOT NULL,
+            city2 TEXT NOT NULL,
+            state2 TEXT NOT NULL,
+            zip2 TEXT NOT NULL
         );
     ").await?;
     tx.commit().await?;
@@ -128,6 +137,41 @@ pub async fn authenticate_user(pool: &Pool<Sqlite>, username: &str, password: &s
 
 }
 
+// update profile function
+pub async fn update_profile(pool: &Pool<Sqlite>, full_name: Option<&str>, address1: Option<&str>, city1: Option<&str>, state1: Option<&str>, zip1: Option<&str>, address2: Option<&str>, city2:Option&str, state2: Option<&str>, zip2: Option<&str>) -> Result<(), Box<dyn Error>> {
+    // check if user exists
+    let rs_maybe = sqlx::query("SELECT * FROM profile WHERE user_id = ?")
+        .bind(user_id)
+        .fetch_optional(pool)
+        .await?;
+    // if user does not exist, return error
+    if rs_maybe.is_none() {
+        return Err(Box::new(AuthenticationError::UsernameDoesNotExist))
+    }
+
+    // check if required fields are empty
+    let required_fields = [full_name, address1, city1, state1, zip1];
+    if let Some(missing_field) = required_fields.iter().find(|x| x.is_empty()) {
+        return Err(Box::new(AccountCreationError::EmptyPassword))
+    } else { // update profile
+        sqlx::query("UPDATE profile SET full_name = ?, address1 = ?, city1 = ?, state1 = ?, zip1 = ? WHERE user_id = ?")
+            .bind(full_name). bind(address1). bind(city1). bind(state1). bind(zip1). bind(user_id). execute(pool).await?;
+    }
+
+    // the info for address2 is optional, but all fields must be filled if any are filled
+    if address2.is_some() {
+        let required_fields = [address2, city2, state2, zip2];
+        if let Some(missing_field) = required_fields.iter().find(|x| x.is_empty()) {
+            return Err(Box::new(AccountCreationError::EmptyPassword))
+        } else { // update profile
+            sqlx::query("UPDATE profile SET address2 = ?, city2 = ?, state2 = ?, zip2 = ? WHERE user_id = ?")
+                .bind(address2). bind(city2). bind(state2). bind(zip2). bind(user_id). execute(pool).await?;
+        }
+    }
+
+    Ok(())
+}
+
 /*
 pub async fn store_quote(pool: &Pool<Sqlite>, gallons: &i32, address: &str, date: &str) -> Result<String, Box<dyn Error>>{
     let rs
@@ -173,5 +217,40 @@ mod tests {
 
         let auth_bad_username = crate::database::authenticate_user(&pool, "wrongusername", "password").await;
         assert!(auth_bad_username.is_err());
+    }
+
+    // test update profile
+    #[tokio::test]
+    pub async fn test_update_profile() {
+        let pool = care::database::init_connection("sqlite://memory:", 1).await.unwrap();
+        let full_name = "John Doe";
+        let address1 = "5113 Rainflower Circle S";
+        let city1 = "League City";
+        let state1 = "TX";
+        let zip1 = "77573";
+        let address2 = "1600 Pennsylvania Ave NW";
+        let city2 = "Washington";
+        let state2 = "DC";
+        let zip2 = "20500";
+        let user_id = "test";
+
+        let create_user_res = crate::database::register_user(&pool, "test", "password").await;
+        assert!(create_user_res.is_ok());
+
+        // test update profile with all fields filled
+        let update_profile_res = crate::database::update_profile(&pool, full_name, address1, city1, state1, zip1, address2, city2, state2, zip2).await;
+        assert!(update_profile_res.is_ok());
+
+        // test update profile with all fields except address2 fields
+        let update_profile_res = crate::database::update_profile(&pool, full_name, address1, city1, state1, zip1, None, None, None, None).await;
+        assert!(update_profile_res.is_ok());
+
+        // test update profile with missing required field
+        let update_profile_res = crate::database::update_profile(&pool, full_name, address1, city1, state1, "").await;
+        assert!(update_profile_res.is_err());
+
+        // test update profile with missing required field
+        let update_profile_res = crate::database::update_profile(&pool, full_name, address1, city1, state1, zip1, address2, city2, state2, "").await;
+        assert!(update_profile_res.is_err());
     }
 }
