@@ -34,7 +34,7 @@ pub async fn init_tables(pool: &Pool<Sqlite>) -> Result<(), sqlx::Error> {
             user_id TEXT PRIMARY KEY NOT NULL,
             username TEXT UNIQUE NOT NULL,
             password_hash BLOB NOT NULL,
-            password_salt BLOB NOT NULL
+            password_salt BLOB NOT NULL,
             full_name TEXT NOT NULL,
             address1 TEXT NOT NULL,
             city1 TEXT NOT NULL,
@@ -138,7 +138,7 @@ pub async fn authenticate_user(pool: &Pool<Sqlite>, username: &str, password: &s
 }
 
 // update profile function
-pub async fn update_profile(pool: &Pool<Sqlite>, full_name: Option<&str>, address1: Option<&str>, city1: Option<&str>, state1: Option<&str>, zip1: Option<&str>, address2: Option<&str>, city2:Option&str, state2: Option<&str>, zip2: Option<&str>) -> Result<(), Box<dyn Error>> {
+pub async fn update_profile(pool: &Pool<Sqlite>, user_id: &str, full_name: Option<&str>, address1: Option<&str>, city1: Option<&str>, state1: Option<&str>, zip1: Option<&str>, address2: Option<&str>, city2:Option<&str>, state2: Option<&str>, zip2: Option<&str>) -> Result<(), Box<dyn Error>> {
     // check if user exists
     let rs_maybe = sqlx::query("SELECT * FROM profile WHERE user_id = ?")
         .bind(user_id)
@@ -151,7 +151,7 @@ pub async fn update_profile(pool: &Pool<Sqlite>, full_name: Option<&str>, addres
 
     // check if required fields are empty
     let required_fields = [full_name, address1, city1, state1, zip1];
-    if let Some(missing_field) = required_fields.iter().find(|x| x.is_empty()) {
+    if let Some(missing_field) = required_fields.iter().find(|x| x.is_none()) {
         return Err(Box::new(AccountCreationError::EmptyPassword))
     } else { // update profile
         sqlx::query("UPDATE profile SET full_name = ?, address1 = ?, city1 = ?, state1 = ?, zip1 = ? WHERE user_id = ?")
@@ -161,7 +161,7 @@ pub async fn update_profile(pool: &Pool<Sqlite>, full_name: Option<&str>, addres
     // the info for address2 is optional, but all fields must be filled if any are filled
     if address2.is_some() {
         let required_fields = [address2, city2, state2, zip2];
-        if let Some(missing_field) = required_fields.iter().find(|x| x.is_empty()) {
+        if let Some(missing_field) = required_fields.iter().find(|x| x.is_none()) {
             return Err(Box::new(AccountCreationError::EmptyPassword))
         } else { // update profile
             sqlx::query("UPDATE profile SET address2 = ?, city2 = ?, state2 = ?, zip2 = ? WHERE user_id = ?")
