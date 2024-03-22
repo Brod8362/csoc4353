@@ -43,19 +43,6 @@ td {
     /*object-position: */
 }
 
-/* #info {
-    background-color: var(--light_cream);
-    padding: 1px 10px 10px 10px;
-    border-left: 2px solid black;
-    border-right: 2px solid black;
-    margin-left: 100px;
-    margin-right: 100px;
-} */
-
-/* #info h2{
-    font-size: 18px;
-} */
-
 #account{
     float: right;
     margin: 10px;
@@ -117,7 +104,7 @@ li a:hover{
     height: 500px;
 }
 
-.tab button {
+.tab a {
     display: block;
     background-color: inherit;
     color: var(--light_black);
@@ -130,26 +117,22 @@ li a:hover{
     transition: 0.3s;
 }
 
-.tab button:hover {
+.tab a:hover {
     background-color: var(--cheddar_cheese);
     color: var(--discord_black);
 }
 
-.tab button.active {
+.tab a.active {
     background-color: var(--cheddar_cheese);
     color: var(--discord_black);
     border: 1px solid var(--discord_black);
 }
 
-#display-box {
+#quote-content {
     float: left;
     width: 65%;
     border: 1px solid var(--discord_black);
     background-color: var(--light_cream);
     height: 460px;
     padding: 20px;
-}
-
-#hidden {
-    display: none;
 }
