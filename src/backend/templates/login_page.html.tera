@@ -1,58 +1,58 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <style>
-            .form-sect{
-                display: flex;
-                align-items: center;
-            }
-        </style>
-    </head>
-    <body>
-        <div>
-            <h1>Welcome!</h1>
-            <p>Please login or register to continue.</p>
-            <form hx-post="/login" hx-target="#content">
-                
+<head>
+    <style>
+        .form-sect{
+            display: flex;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <h1>Welcome!</h1>
+        <p>Please login or register to continue.</p>
+        <form hx-post="/login" hx-target="#content-form">
+            
+            <section class="form-sect">
+                <img src="/static/dummy.png" alt="person icon">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required>
+            </section>
+
+            <br>
+            <section class="form-sect">
+                <img src="/static/dummy.png" alt="key icon">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+            </section>
+
+            {% if error %}
+            <div class="error" style="color:red;">
+                <p>{{error}}</p>
+            </div>
+            {% endif %}
+
+            {% if message %}
+            <div class="message">
+                <p>{{message}}</p>
+            </div>
+            {% endif %}
+
+            <br>
+            <button type="submit">
                 <section class="form-sect">
-                    <img src="/static/dummy.png" alt="person icon">
-                    <label for="username">Username:</label>
-                    <input type="text" id="username" name="username" required>
+                    <img src="/static/dummy.png" alt="arrow icon ">
+                    <span>Login</span>
                 </section>
-
-                <br>
+            </button>
+            <button type="submit" hx-post="/register">
                 <section class="form-sect">
-                    <img src="/static/dummy.png" alt="key icon">
-                    <label for="password">Password:</label>
-                    <input type="password" id="password" name="password" required>
+                    <img src="/static/dummy.png" alt="pencil icon">
+                    <span>Register</span>
                 </section>
-
-                {% if error %}
-                <div class="error" style="color:red;">
-                    <p>{{error}}</p>
-                </div>
-                {% endif %}
-
-                {% if message %}
-                <div class="message">
-                    <p>{{message}}</p>
-                </div>
-                {% endif %}
-
-                <br>
-                <button type="submit">
-                    <section class="form-sect">
-                        <img src="/static/dummy.png" alt="arrow icon ">
-                        <span>Login</span>
-                    </section>
-                </button>
-                <button type="submit" hx-post="/register">
-                    <section class="form-sect">
-                        <img src="/static/dummy.png" alt="pencil icon">
-                        <span>Register</span>
-                    </section>
-                </button>
-            </form>
-        </div>
-    </body>
+            </button>
+        </form>
+    </div>
+</body>
 </html>
