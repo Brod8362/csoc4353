@@ -3,7 +3,7 @@
     <h1>Fuel Quote Form</h1>
     <p>Fill out the form below for fuel quote form information.</p>
 
-    <form hx-post="/fuel_quote" hx-target="#fuel-quote-form">
+    <form hx-post="/page/quote">
         <section class="form-sect">
             <img src="/static/dummy.png" alt="fuel icon">            
             <label for="gallons_requested">Gallons Requested:</label>
@@ -22,7 +22,7 @@
                         <input type="radio" id="address1" name="address" value="address1" checked>
                         <label for="address1">
                             Address 1:<br>
-                            5113 Rainflower Circle S<br>
+                            5106 Rainflower Circle S<br>
                             League City, TX 77573
                         </label>
                     </section>
@@ -63,10 +63,11 @@
         </section>
 
         <br>
-        <button type="submit" hx-get="/fuel_quote" hx-trigger="click" hx-target="#fuel-quote-form">
+        <button type="submit" >
             <section class="form-sect">
                 <img src="/static/dummy.png" alt="checkmark icon">
                 <span>Get Quote</span>
             </section>
+        </button>
     </form>
 </div>
