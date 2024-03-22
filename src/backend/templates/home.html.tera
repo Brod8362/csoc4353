@@ -12,7 +12,7 @@
     <ul>
         <h1>Hello, {{user}}</h1>
         <li><a href="#home">Home</a></li>
-        <li><a hx-get="/page/quote_history" hx-swap="innerHTML" hx-target="#title-form">Fuel Quote History</a></li>
+        <li><a hx-get="/page/quote/history" hx-swap="innerHTML" hx-target="#title-form">Fuel Quote History</a></li>
         <li><a hx-get="/page/quote" hx-swap="innerHTML" hx-target="#title-form">Generate Fuel Quote</a></li>
         <li><a hx-get="/page/profile" hx-swap="innerHTML" hx-target="#title-form">Profile</a></li>
         <li><a hx-get="/logout" hx-swap="innerHTML" hx-target="#title-form"></a></li>
