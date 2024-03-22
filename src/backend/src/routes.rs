@@ -122,15 +122,25 @@ pub fn quote() -> Template {
     )
 }
 
+#[get("/page/quote/1")]
+pub fn quote_id() -> Template {
+    Template::render(
+        "fuel_quote", 
+        context!{
+            
+        }
+    )
+}
+
 #[derive(FromForm)]
 pub struct QuoteData {
-    gallons: String,
+    gallons: i32,
     address: String,
     date: String
 }
 
 #[post("/page/quote", data="<form>")]
-pub async fn quote_request(pool: &State<Pool<Sqlite>>, form: Form<QuoteData>) -> Template {
+pub async fn quote_request(pool: &State<Pool<Sqlite>>, form: Form<QuoteData>) -> String {
     //TODO: handle quote storage inside of the database.rs file
     //let quote_request = database::store_quote(pool, &form.gallons, &form.address, &form.date).await;
 
@@ -142,16 +152,10 @@ pub async fn quote_request(pool: &State<Pool<Sqlite>>, form: Form<QuoteData>) ->
     */
 
     //TODO: have this happen once quote_request is OK
-    Template::render(
-        "fuel_quote_form",
-        context!{
-            message: "Fuel quote submitted"
-        }
-    )
+    return String::from("<p> Fuel Quote Submitted </p>")
 }
 
-
-#[get("/page/quote_history")]
+#[get("/page/quote/history")]
 pub fn quote_history() -> Template {
     Template::render(
         "fuel_quote_history", 
@@ -161,18 +165,19 @@ pub fn quote_history() -> Template {
     )
 }
 
-#[post("/page/quote", data="<form>")]
-pub async fn submit_quote(pool: &State<Pool<Sqlite>>, form: Form<QuoteData>) -> Template{
-    let form_input = form.into_inner();
-    Template:: render(
-        "fuel_quote_history",
-        context!{
-            gallons: form_input.gallons,
-            address: form_input.address,
-            date: form_input.date,
-        }
-    )
-}
+// #[post("/page/quote", data="<form>")]
+// pub async fn quote_submit(pool: &State<Pool<Sqlite>>, form: Form<QuoteData>) -> Template{
+//     let form_input = form.into_inner();
+//     Template:: render(
+//         "fuel_quote",
+//         context!{
+//             // gallons: form_input.gallons,
+//             // address: form_input.address,
+//             // date: form_input.date,
+//         }
+//     )
+// }
+
 #[cfg(test)]
 mod tests {
     use rocket::{http::{Cookie, CookieJar}, tokio, State};
