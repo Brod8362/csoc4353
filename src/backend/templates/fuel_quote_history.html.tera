@@ -2,95 +2,10 @@
 <h1>Fuel Quote History</h1>
 <p>View your fuel quote history below.</p>
 
-    <section class="tab">
-        <button hx-get="/page/quote_history" hx-swap="innerHTML" hx-target="#display-box" hx-select="#tab1">Quote 1</button>
-        <button hx-get="/page/quote_history" hx-swap="innerHTML" hx-target="#display-box" hx-select="#tab2">Quote 2</button>
-        <button hx-get="/page/quote_history" hx-swap="innerHTML" hx-target="#display-box" hx-select="#tab3">Quote 3</button>
-    </section>
-
-    <section id="display-box">
-        <p>info will display here</p>
-    </section>
-
-    <section id="hidden">
-        <section id="tab1" class="tabContent">
-            <section class="form-sect">
-                <img src="/static/dummy.png" alt="calendar icon">
-                Date: 2021-04-01
-            </section>
-            <section class="form-sect">
-                <img src="/static/dummy.png" alt="fuel icon">
-                Gallons Requested: 100
-            </section>
-            <section class="form-sect">
-                <img src="/static/dummy.png" alt="house icon">
-                Delivery Address: 5113 Rainflower Circle S, League City, TX 77573
-            </section>
-            <section class="form-sect">
-                <img src="/static/dummy.png" alt="truck icon">
-                Delivery Date: 2021-04-15
-            </section>
-            <section class="form-sect">
-                <img src="/static/dummy.png" alt="money icon">
-                Price Per Gallon: 2.00
-            </section>
-            <section class="form-sect">
-                <img src="/static/dummy.png" alt="money icon">
-                Total Amount Due: 200.00
-            </section>
-        </section>
-    
-        <section id="tab2" class="tabContent">
-            <section class="form-sect">
-                <img src="/static/dummy.png" alt="calendar icon">
-                Date: 2022-08-11
-            </section>
-            <section class="form-sect">
-                <img src="/static/dummy.png" alt="fuel icon">
-                Gallons Requested: 100
-            </section>
-            <section class="form-sect">
-                <img src="/static/dummy.png" alt="house icon">
-                Delivery Address: 5113 Rainflower Circle S, League City, TX 77573
-            </section>
-            <section class="form-sect">
-                <img src="/static/dummy.png" alt="truck icon">
-                Delivery Date: 2022-09-02
-            </section>
-            <section class="form-sect">
-                <img src="/static/dummy.png" alt="money icon">
-                Price Per Gallon: 2.00
-            </section>
-            <section class="form-sect">
-                <img src="/static/dummy.png" alt="money icon">
-                Total Amount Due: 200.00
-            </section>
-        </section>
-    
-        <section id="tab3" class="tabContent">
-            <section class="form-sect">
-                <img src="/static/dummy.png" alt="calendar icon">
-                Date: 2023-10-29
-            </section>
-            <section class="form-sect">
-                <img src="/static/dummy.png" alt="fuel icon">
-                Gallons Requested: 100
-            </section>
-            <section class="form-sect">
-                <img src="/static/dummy.png" alt="house icon">
-                Delivery Address: 5113 Rainflower Circle S, League City, TX 77573
-            </section>
-            <section class="form-sect">
-                <img src="/static/dummy.png" alt="truck icon">
-                Delivery Date: 2023-11-15
-            </section>
-            <section class="form-sect">
-                <img src="/static/dummy.png" alt="money icon">
-                Price Per Gallon: 2.00
-            </section>
-            <section class="form-sect">
-                <img src="/static/dummy.png" alt="money icon">
-                Total Amount Due: 200.00
-            </section>
-        </section>
-    </section>
+    <div class="tab">
+        <a hx-get="/page/quote" hx-target="#quote-content">New Quote</a>
+        <a hx-get="/page/quote/1" hx-target="#quote-content">Quote 1</a>
+        <a hx-get="/page/quote/1" hx-target="#quote-content">Quote 2</a>
+    </div>
+    <div id="quote-content"> <!-- intentionally left blank - its loaded by the buttons -->
+    </div>
