@@ -92,7 +92,7 @@ li a:hover{
 .form-sect {
     margin: auto;
     width: fit-content;
-    overflow-x: scroll;    
+    /* overflow-x: scroll;     */
     padding: 10px;
 }
 
