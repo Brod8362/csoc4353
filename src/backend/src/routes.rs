@@ -122,8 +122,8 @@ pub fn quote() -> Template {
     )
 }
 
-#[get("/page/quote/1")]
-pub fn quote_id() -> Template {
+#[get("/page/quote/<id>")]
+pub fn quote_id(id: String) -> Template {
     Template::render(
         "fuel_quote", 
         context!{
@@ -165,18 +165,18 @@ pub fn quote_history() -> Template {
     )
 }
 
-// #[post("/page/quote", data="<form>")]
-// pub async fn quote_submit(pool: &State<Pool<Sqlite>>, form: Form<QuoteData>) -> Template{
-//     let form_input = form.into_inner();
-//     Template:: render(
-//         "fuel_quote",
-//         context!{
-//             // gallons: form_input.gallons,
-//             // address: form_input.address,
-//             // date: form_input.date,
-//         }
-//     )
-// }
+#[post("/page/quote", data="<form>")]
+pub async fn quote_submit(pool: &State<Pool<Sqlite>>, form: Form<QuoteData>) -> Template{
+    let form_input = form.into_inner();
+    Template:: render(
+        "fuel_quote",
+        context!{
+            gallons: form_input.gallons,
+            address: form_input.address,
+            date: form_input.date,
+        }
+    )
+}
 
 #[cfg(test)]
 mod tests {
