@@ -122,27 +122,17 @@ pub fn quote() -> Template {
     )
 }
 
-#[get("/page/quote/<id>")]
-pub fn quote_id(id: String) -> Template {
-    Template::render(
-        "fuel_quote", 
-        context!{
-            
-        }
-    )
-}
-
 #[derive(FromForm)]
 pub struct QuoteData {
-    gallons: i32,
+    gallons_requested: String,
     address: String,
-    date: String
+    delivery_date: String,
 }
 
 #[post("/page/quote", data="<form>")]
 pub async fn quote_request(pool: &State<Pool<Sqlite>>, form: Form<QuoteData>) -> String {
     //TODO: handle quote storage inside of the database.rs file
-    //let quote_request = database::store_quote(pool, &form.gallons, &form.address, &form.date).await;
+    //let quote_request = database::store_quote(pool, &form.gallons_requested, &form.address, &form.delivery_date).await;
 
     //TODO: error handling
     /*
@@ -155,25 +145,35 @@ pub async fn quote_request(pool: &State<Pool<Sqlite>>, form: Form<QuoteData>) ->
     return String::from("<p> Fuel Quote Submitted </p>")
 }
 
-#[get("/page/quote/history")]
-pub fn quote_history() -> Template {
-    Template::render(
-        "fuel_quote_history", 
+#[get("/page/quote/<id>")]
+pub fn quote_id(id: &str) -> Template {
+    Template:: render(
+        "fuel_quote",
         context!{
             
         }
     )
 }
 
-#[post("/page/quote", data="<form>")]
-pub async fn quote_submit(pool: &State<Pool<Sqlite>>, form: Form<QuoteData>) -> Template{
+#[post("/page/quote/<id>", data="<form>")]
+pub async fn quote_submit(id: &str, form: Form<QuoteData>) -> Template {
     let form_input = form.into_inner();
     Template:: render(
         "fuel_quote",
         context!{
-            gallons: form_input.gallons,
+            gallons_requested: form_input.gallons_requested,
             address: form_input.address,
-            date: form_input.date,
+            delivery_date: form_input.delivery_date,
+        }
+    )
+}
+
+#[get("/page/quote/history")]
+pub fn quote_history() -> Template {
+    Template::render(
+        "fuel_quote_history", 
+        context!{
+            
         }
     )
 }

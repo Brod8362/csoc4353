@@ -61,13 +61,20 @@
             <p>Total Amount Due: 0.00 USD</p>
             <!-- total is a noneditable numeric value calculated (gallons * price per gallon)-->
         </section>
-
         <br>
-        <button type="submit" >
+
+        <!-- FOR TEMPLATE APPLICATION -->
+        {% if message %}
+        <div class="message">
+            <p>{{message}}</p>
+        </div>
+        {% endif %}
+
+        <button type="submit" hx-post="/page/quote/<id>">
             <section class="form-sect">
                 <img src="/static/dummy.png" alt="checkmark icon">
                 <span>Get Quote</span>
             </section>
-        </button>
+        </button>   
     </form>
 </div>

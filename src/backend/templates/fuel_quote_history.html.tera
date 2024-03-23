@@ -3,8 +3,8 @@
 
     <div class="tab">
         <a hx-get="/page/quote" hx-target="#quote-content">[+] New Quote</a>
-        <a hx-get="/page/quote/1" hx-target="#quote-content">Quote 2</a>
-        <a hx-get="/page/quote/2" hx-target="#quote-content">Quote 3</a>
+        <a hx-get="/page/quote/1" hx-target="#quote-content">Quote 1</a>
+        <a hx-get="/page/quote/2" hx-target="#quote-content">Quote 2</a>
     </div>
 
     <div id="quote-content">

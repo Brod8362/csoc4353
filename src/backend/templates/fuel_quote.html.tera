@@ -1,20 +1,33 @@
-<section class="tabContent">
-    <section class="form-sect">
+<form class="tabContent" hx-post="/page/quote/<id>">
+    <div class="form-sect">
         <img src="/static/dummy.png" alt="calendar icon">
         Date: 2021-04-01
-    </section>
-    <section class="form-sect">
+    </div>
+
+    <div class="form-sect">
         <img src="/static/dummy.png" alt="fuel icon">
-        Gallons Requested: 100
-    </section>
+        {% if gallons_requested %}
+        <p>Gallons Requested: {{gallons_requested}}</p>
+        {% else %}
+        <p>Gallons Requested: 0 </p>
+        {% endif %}
+    </div>
+
     <section class="form-sect">
         <img src="/static/dummy.png" alt="house icon">
         Delivery Address: 5113 Rainflower Circle S, League City, TX 77573
     </section>
-    <section class="form-sect">
+
+    <div class="form-sect">
         <img src="/static/dummy.png" alt="truck icon">
-        Delivery Date: 2021-04-15
-    </section>
+        {% if delivery_date %}
+        <p>Delivery Date: {{delivery_date}}</p>
+        {% else %}
+        <p>Delivery Date: 2021-04-15 </p>
+        {% endif %}
+        
+    </div>
+
     <section class="form-sect">
         <img src="/static/dummy.png" alt="money icon">
         Price Per Gallon: 2.00
@@ -23,5 +36,5 @@
         <img src="/static/dummy.png" alt="money icon">
         Total Amount Due: 200.00
     </section>
-</section>
+</form>
 
