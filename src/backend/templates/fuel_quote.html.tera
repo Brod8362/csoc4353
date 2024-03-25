@@ -1,11 +1,10 @@
 <form class="tabContent">
-    
-    
     {% if curr_id %}
         <p>Current ID: {{curr_id}} </p>
     {% else %}
         <p>Form has been submitted: </p>
     {% endif %}
+    
     <!-- Current Date, IMPLEMENT THIS LATER -->
     <div class="form-sect">
         <img src="/static/dummy.png" alt="calendar icon">

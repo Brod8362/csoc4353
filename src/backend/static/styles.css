@@ -71,7 +71,7 @@ li a:hover{
 }
 
 /* FORM */
-#content-form {
+#main-content {
 	background-image: url(desert_star.png);
 	height: 80%;
 	width: 100%;
@@ -81,7 +81,7 @@ li a:hover{
     background-size: cover;
 }
 
-#title-form {
+#title-menu {
     background-color: var(--light_yellow);
     color: var(--light_black);
     margin: auto;
