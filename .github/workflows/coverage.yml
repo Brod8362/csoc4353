@@ -17,10 +17,18 @@ jobs:
           cd src/backend
           echo 'database_uri = "sqlite://:memory:"\nmax_connections=1' > config.toml # use in-memory database
           cargo +nightly tarpaulin --verbose --all-features --workspace --timeout 120 --out xml
-          
+     
       - name: Upload code coverage report
         uses: actions/upload-artifact@v4
         with:
-          name: dist-without-markdown
+          name: coverage-report
           path: |
             src/backend/*.xml
+
+      - name: Verify minimum 80% coverage
+        uses: busybox:latest
+        run: |
+          echo "This is pretty jank, don't be surprised if it breaks..."
+          cd src/backend
+          COVERAGE=$(cat cobertura.xml | sed s/\>/\\n/g | grep -oE -m 1 'line-rate="[0-9](\.[0-9]+)' | cut -c 12-)
+          test $(echo "$RATE>=0.8" | bc) -eq 1 
