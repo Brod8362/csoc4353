@@ -1,4 +1,4 @@
-iname: coverage
+name: coverage
 
 on: [push]
 jobs:
