@@ -15,5 +15,12 @@ jobs:
       - name: Run unit tests & generate code coverage
         run: |
           cd src/backend
-          echo 'database_uri = "sqlite://:memory:"\nmax_connections=1" > config.toml' # use in-memory database
+          echo 'database_uri = "sqlite://:memory:"\nmax_connections=1' > config.toml # use in-memory database
           cargo +nightly tarpaulin --verbose --all-features --workspace --timeout 120 --out xml
+          
+      - name: Upload code coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist-without-markdown
+          path: |
+            src/backend/*.xml
