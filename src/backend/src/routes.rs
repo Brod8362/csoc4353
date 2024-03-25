@@ -6,6 +6,7 @@ use rocket::response::Redirect;
 use rocket::form::Form;
 use rocket::State;
 use rocket_dyn_templates::{context, Template};
+
 use sqlx::Pool;
 use sqlx::Sqlite;
 
@@ -130,7 +131,7 @@ pub struct QuoteData {
 }
 
 #[post("/page/quote", data="<form>")]
-pub async fn quote_request(pool: &State<Pool<Sqlite>>, form: Form<QuoteData>) -> String {
+pub async fn quote_submit(pool: &State<Pool<Sqlite>>, form: Form<QuoteData>) -> Template {
     //TODO: handle quote storage inside of the database.rs file
     //let quote_request = database::store_quote(pool, &form.gallons_requested, &form.address, &form.delivery_date).await;
 
@@ -141,29 +142,28 @@ pub async fn quote_request(pool: &State<Pool<Sqlite>>, form: Form<QuoteData>) ->
     }
     */
 
-    //TODO: have this happen once quote_request is OK
-    return String::from("<p> Fuel Quote Submitted </p>")
+    //TODO: return submission confirmation upon OK
+    //return String::from("<p> Fuel Quote Submitted </p>")
+
+    //renders form results FOR NOW until database implement
+    let form_inp = form.into_inner();
+    Template:: render(
+        "fuel_quote",
+        context!{
+            gallons_requested: form_inp.gallons_requested,
+            address: form_inp.address,
+            delivery_date: form_inp.delivery_date,
+        }
+    )
 }
+
 
 #[get("/page/quote/<id>")]
 pub fn quote_id(id: &str) -> Template {
     Template:: render(
         "fuel_quote",
         context!{
-            
-        }
-    )
-}
-
-#[post("/page/quote/<id>", data="<form>")]
-pub async fn quote_submit(id: &str, form: Form<QuoteData>) -> Template {
-    let form_input = form.into_inner();
-    Template:: render(
-        "fuel_quote",
-        context!{
-            gallons_requested: form_input.gallons_requested,
-            address: form_input.address,
-            delivery_date: form_input.delivery_date,
+            curr_id: id
         }
     )
 }
@@ -181,7 +181,10 @@ pub fn quote_history() -> Template {
 #[cfg(test)]
 mod tests {
     use rocket::{http::{Cookie, CookieJar}, tokio, State};
+    use rocket::local::blocking::Client;
+    use rocket::http::Status;
 
+    use crate::rocket;
     use crate::config::AppConfig;
 
     #[tokio::test]
@@ -225,5 +228,12 @@ mod tests {
         };
         //TODO: need to figure out how to instantiate a CookieJar from scratch and call the correct request method
         todo!()
+    }
+
+    #[tokio::test]
+    async fn test_index() {
+        let client = Client::tracked(rocket()).expect("valid rocket instance");
+        let mut response = client.get("/").dispatch();
+        assert_eq!(response.status(), Status::Ok);
     }
 }

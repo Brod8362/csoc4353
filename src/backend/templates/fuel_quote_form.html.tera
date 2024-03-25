@@ -1,9 +1,9 @@
 
 <div>
-    <h1>Fuel Quote Form</h1>
-    <p>Fill out the form below for fuel quote form information.</p>
-
     <form hx-post="/page/quote">
+        <h1>Fuel Quote Form</h1>
+        <p>Fill out the form below for fuel quote form information.</p>
+        
         <section class="form-sect">
             <img src="/static/dummy.png" alt="fuel icon">            
             <label for="gallons_requested">Gallons Requested:</label>
@@ -70,7 +70,7 @@
         </div>
         {% endif %}
 
-        <button type="submit" hx-post="/page/quote/<id>">
+        <button type="submit">
             <section class="form-sect">
                 <img src="/static/dummy.png" alt="checkmark icon">
                 <span>Get Quote</span>

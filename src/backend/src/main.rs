@@ -32,7 +32,6 @@ async fn rocket() -> _ {
                 routes::profile,
                 routes::quote,
                 routes::quote_id,
-                routes::quote_request,
                 routes::quote_submit,
                 routes::quote_history
             ]
