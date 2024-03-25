@@ -1,8 +1,8 @@
 <form class="tabContent">
     {% if curr_id %}
-        <p>Current ID: {{curr_id}} </p>
+        <p> Current ID: {{curr_id}} </p>
     {% else %}
-        <p>Form has been submitted: </p>
+        <p> Form has been submitted: </p>
     {% endif %}
     
     <!-- Current Date, IMPLEMENT THIS LATER -->

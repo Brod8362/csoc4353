@@ -181,7 +181,8 @@ pub fn quote_history() -> Template {
 #[cfg(test)]
 mod tests {
     use rocket::{http::{Cookie, CookieJar}, tokio, State};
-    use rocket::local::blocking::Client;
+    // use rocket::local::blocking::Client;
+    use rocket::local::asynchronous::Client;
     use rocket::http::Status;
 
     use crate::rocket;
@@ -231,9 +232,17 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn test_index() {
-        let client = Client::tracked(rocket()).expect("valid rocket instance");
-        let mut response = client.get("/").dispatch();
-        assert_eq!(response.status(), Status::Ok);
+    async fn test_quote_id() {
+        let client = Client::tracked(rocket().await).await.expect("valid rocket insance");
+        let response = client.get("/page/quote/1").dispatch().await;
+        assert!(response.status() == Status::Ok);
+        let body = response.into_string().await.unwrap();
+        assert!(body.contains("<p> Current ID: 1 </p>"));
+
+        let response = client.get("/page/quote/2").dispatch().await;
+        assert!(response.status() == Status::Ok);
+        let body = response.into_string().await.unwrap();
+        assert!(body.contains("<p> Current ID: 2 </p>"));        
     }
+
 }
