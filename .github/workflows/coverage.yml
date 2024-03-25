@@ -26,7 +26,6 @@ jobs:
             src/backend/*.xml
 
       - name: Verify minimum 80% coverage
-        uses: busybox:latest
         run: |
           echo "This is pretty jank, don't be surprised if it breaks..."
           cd src/backend
