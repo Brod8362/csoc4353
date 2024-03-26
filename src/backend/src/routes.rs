@@ -219,8 +219,36 @@ mod tests {
     }
 
     #[tokio::test]
+    async fn test_form_submit(){
+        //test that info can be submitted
+        let client = Client::tracked(rocket().await).await.expect("valid rocket instance");
+        let mut submit = client.post(uri!("/page/quote"));
+        submit = submit.header(ContentType::Form);
+        submit.set_body(r#"gallons_requested=10&address=address1&delivery_date=2024-03-26"#);
+        let response = submit.dispatch().await;
+        assert!(response.status() == Status::Ok);
+    }
+
+    #[tokio::test]
+    async fn test_submit_error(){
+        //test that no info throws error
+        let client = Client::tracked(rocket().await).await.expect("valid rocket instance");
+        let mut submit = client.post(uri!("/page/quote"));
+        submit = submit.header(ContentType::Form);
+        let response = submit.dispatch().await;
+        assert!(response.status() != Status::Ok);
+    }
+
+    #[tokio::test]
+    async fn test_form_data(){
+        //test that the info can be submitted
+        let client = Client::tracked(rocket().await).await.expect("valid rocket instance");
+        let response = client.post(uri!("/page/quote")).dispatch().await;
+    }
+
+    #[tokio::test]
     async fn test_quote_id() {
-        let client = Client::tracked(rocket().await).await.expect("valid rocket insance");
+        let client = Client::tracked(rocket().await).await.expect("valid rocket instance");
         let response = client.get("/page/quote/1").dispatch().await;
         assert!(response.status() == Status::Ok);
         let body = response.into_string().await.unwrap();
@@ -252,5 +280,4 @@ mod tests {
 
         assert!(body.contains("<a hx-get=\"/page/quote/2\" hx-target=\"#quote-content\">Quote 2</a>"));
     }
-
 }
