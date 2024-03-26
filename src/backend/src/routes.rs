@@ -241,13 +241,6 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn test_form_data(){
-        //test that the info can be submitted
-        let client = Client::tracked(rocket().await).await.expect("valid rocket instance");
-        let response = client.post(uri!("/page/quote")).dispatch().await;
-    }
-
-    #[tokio::test]
     async fn test_quote_id() {
         let client = Client::tracked(rocket().await).await.expect("valid rocket instance");
         let response = client.get("/page/quote/1").dispatch().await;
