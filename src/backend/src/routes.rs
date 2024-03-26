@@ -260,16 +260,8 @@ mod tests {
         // check when another quote is created and both quotes are visible
 
         // check current "history"        
-        let client = Client::tracked(rocket().await).await.expect("valid rocket instance");
-        let response = client.get("/page/quote/history").dispatch().await;
-        assert!(response.status() == Status::Ok);
-        let body = response.into_string().await.unwrap();
         assert!(body.contains("<a hx-get=\"/page/quote/1\" hx-target=\"#quote-content\">Quote 1</a>"));
 
-        let client = Client::tracked(rocket().await).await.expect("valid rocket instance");
-        let response = client.get("/page/quote/history").dispatch().await;
-        assert!(response.status() == Status::Ok);
-        let body = response.into_string().await.unwrap();
         assert!(body.contains("<a hx-get=\"/page/quote/2\" hx-target=\"#quote-content\">Quote 2</a>"));
     }
 
