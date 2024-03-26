@@ -171,10 +171,8 @@ pub fn quote_history() -> Template {
 
 #[cfg(test)]
 mod tests {
+    use crate::{rocket, routes::AuthRequest};
     use rocket::{form::Form, http::{ContentType, Status}, local::asynchronous::Client, tokio, State};
-
-    use crate::rocket;
-    use crate::config::AppConfig;
 
     #[tokio::test]
     async fn test_user_creation() {
@@ -194,52 +192,65 @@ mod tests {
 
     #[tokio::test]
     async fn test_user_auth() {
-        let pool = crate::database::init_connection("sqlite://:memory:", 1).await.unwrap();
-        let form = crate::routes::AuthRequest {
-            username: "test".to_string(),
-            password: "test".to_string()
-        };
-        let state = State::from(&pool);
-        let _ = crate::routes::register_request(state, form.into()).await;
-
-        let r = crate::database::register_user(&pool, "test", "test").await;
-        assert!(r.is_ok());
-
-        //authenticate via form
-        let appconf = AppConfig {
-            database_uri: "sqlite://:memory:".to_owned(),
-            max_connections: 1,
-            jwt_secret: "test".to_owned()
-        };
-        let form = crate::routes::AuthRequest {
-            username: "test".to_owned(),
-            password: "test".to_owned()
-        };
-        //TODO: need to figure out how to instantiate a CookieJar from scratch and call the correct request method
-        todo!()
-    }
-
-    #[tokio::test]
-    async fn test_form_submit(){
-        //test that info can be submitted
+        //register and log in
         let client = Client::tracked(rocket().await).await.expect("valid rocket instance");
-        let response = client.post(uri!("/page/quote")).dispatch().await;
+        let response = client.post(uri!("/register")).dispatch().await;
+        //this should throw an error as the request did not specify any credentials
+        assert!(response.status() != Status::Ok);
+        let mut request = client.post(uri!("/register"));
+        request = request.header(ContentType::Form);
+        request.set_body(r#"username=test&password=password"#);
+        
+        let response = request.dispatch().await;
         assert!(response.status() == Status::Ok);
-
-        let mut submit = client.post(uri!("/page/quote"));
-        submit = submit.header(ContentType::Form);
-        submit.set_body(r#"gallons_requested=10&address=address1&delivery_date=2024-03-26"#);
-        let response = submit.dispatch().await;
-        assert!(response.status() == Status::Ok);      
-
-        //test that info stored is correct
-        // let submitted = response.into_string().await.unwrap();
-        // assert!(submitted.contains("gallons_requested: 10"))
+        
+        // now, try logging in
+        request = client.post(uri!("/login"));
+        request = request.header(ContentType::Form);
+        request.set_body(r#"username=test&password=password"#);
+        
+        let response = request.dispatch().await;
+        assert!(response.status() == Status::Ok);
+        //assert a JWT is present and valid
+        match client.cookies().get("Authorization") {
+            Some(_jwt) => {} //OK, cookie is present,
+            None => panic!("Authorization header not present")
+        }
     }
 
     #[tokio::test]
-    async fn test_form_data(){
-        let client = Client::tracked(rocket().await).await.expect("valid rocket instance");
-        let response = client.post(uri!("/page/quote")).dispatch().await;
+    async fn test_quote_id() {
+        let client = Client::tracked(rocket().await).await.expect("valid rocket insance");
+        let response = client.get("/page/quote/1").dispatch().await;
+        assert!(response.status() == Status::Ok);
+        let body = response.into_string().await.unwrap();
+        assert!(body.contains("<p> Current ID: 1 </p>"));
+
+        let response = client.get("/page/quote/2").dispatch().await;
+        assert!(response.status() == Status::Ok);
+        let body = response.into_string().await.unwrap();
+        assert!(body.contains("<p> Current ID: 2 </p>"));        
     }
+
+    #[tokio::test] 
+    async fn test_quote_history() {
+        // check quote form when user owns no quotes (unable to test right now because of dummy data)
+
+        // check when quote is created
+        let client = Client::tracked(rocket().await).await.expect("valid rocket instance");
+        let response = client.get("/page/quote/history").dispatch().await;
+        assert!(response.status() == Status::Ok);
+        let body = response.into_string().await.unwrap();
+        assert!(body.contains("<a hx-get=\"/page/quote\" hx-target=\"#quote-content\">[+] New Quote</a>"));
+        
+        // make sure new quote appears in history (unable to test rn)
+
+        // check when another quote is created and both quotes are visible
+
+        // check current "history"        
+        assert!(body.contains("<a hx-get=\"/page/quote/1\" hx-target=\"#quote-content\">Quote 1</a>"));
+
+        assert!(body.contains("<a hx-get=\"/page/quote/2\" hx-target=\"#quote-content\">Quote 2</a>"));
+    }
+
 }
