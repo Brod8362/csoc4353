@@ -181,7 +181,6 @@ pub fn quote_history() -> Template {
 #[cfg(test)]
 mod tests {
     use rocket::{http::{Cookie, CookieJar}, tokio, State};
-    // use rocket::local::blocking::Client;
     use rocket::local::asynchronous::Client;
     use rocket::http::Status;
 
