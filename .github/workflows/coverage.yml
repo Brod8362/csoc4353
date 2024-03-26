@@ -30,4 +30,4 @@ jobs:
           echo "This is pretty jank, don't be surprised if it breaks..."
           cd src/backend
           COVERAGE=$(cat cobertura.xml | sed s/\>/\\n/g | grep -oE -m 1 'line-rate="[0-9](\.[0-9]+)' | cut -c 12-)
-          if [ $(python3 -c "print($COVERAGE>=0.8)") = "False" ]; then echo "Minimum 80% coverage not met"; exit 1; fi
+          if [ $(python3 -c "print($COVERAGE>=0.8)") = "False" ]; then echo "Minimum 80% coverage not met (got $COVERAGE)"; exit 1; fi
