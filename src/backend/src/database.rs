@@ -128,7 +128,6 @@ pub async fn authenticate_user(pool: &Pool<Sqlite>, username: &str, password: &s
 
 }
 
-
 mod tests {
     use rocket::tokio;
     #[tokio::test]

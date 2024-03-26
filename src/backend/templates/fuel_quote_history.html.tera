@@ -1,70 +1,12 @@
-<div>
-    <h1>Fuel Quote History</h1>
-    <p>View your fuel quote history below.</p>
+<h1>Fuel Quote History</h1>
+<p>View your fuel quote history below.</p>
 
-    <table>
-        <caption>Fuel Quote History</caption>
-        <tr>
-            <td>
-                <section class="form-sect">
-                    <img src="/static/dummy.png" alt="calendar icon">
-                    Date
-                </section>
-            </td>
-            <td>
-                <section class="form-sect">
-                    <img src="/static/dummy.png" alt="fuel icon">
-                    Gallons Requested
-                </section>
-            </td>
-            <td>
-                <section class="form-sect">
-                    <img src="/static/dummy.png" alt="house icon">
-                    Delivery Address
-                </section>
-            </td>
-            <td>
-                <section class="form-sect">
-                    <img src="/static/dummy.png" alt="truck icon">
-                    Delivery Date
-                </section>
-            </td>
-            <td>
-                <section class="form-sect">
-                    <img src="/static/dummy.png" alt="money icon">
-                    Price Per Gallon
-                </section>
-            </td>
-            <td>
-                <section class="form-sect">
-                    <img src="/static/dummy.png" alt="money icon">
-                    Total Amount Due
-                </section>
-            </td>
-        </tr>
-        <tr>
-            <td>2021-04-01</td>
-            <td>100</td>
-            <td>5113 Rainflower Circle S, League City, TX 77573</td>
-            <td>2021-04-15</td>
-            <td>2.00</td>
-            <td>200.00</td>
-        </tr>
-        <tr>
-            <td>2022-08-11</td>
-            <td>100</td>
-            <td>5113 Rainflower Circle S, League City, TX 77573</td>
-            <td>2022-09-02</td>
-            <td>2.00</td>
-            <td>200.00</td>
-        </tr>
-        <tr>
-            <td>2023-10-29</td>
-            <td>100</td>
-            <td>5113 Rainflower Circle S, League City, TX 77573</td>
-            <td>2023-11-15</td>
-            <td>2.00</td>
-            <td>200.00</td>
-        </tr>
-    </table>
-</div>
+    <div class="tab">
+        <a hx-get="/page/quote" hx-target="#quote-content">[+] New Quote</a>
+        <a hx-get="/page/quote/1" hx-target="#quote-content">Quote 1</a>
+        <a hx-get="/page/quote/2" hx-target="#quote-content">Quote 2</a>
+    </div>
+
+    <div id="quote-content">
+        <!-- blank cause its loaded by buttons -->
+    </div>

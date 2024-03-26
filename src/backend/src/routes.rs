@@ -6,6 +6,7 @@ use rocket::response::Redirect;
 use rocket::form::Form;
 use rocket::State;
 use rocket_dyn_templates::{context, Template};
+
 use sqlx::Pool;
 use sqlx::Sqlite;
 
@@ -58,7 +59,6 @@ pub async fn login_request(pool: &State<Pool<Sqlite>>, cookies: &CookieJar<'_>, 
                 error: error_message
             }
         )
-
     }
     //auth must have been successful at this point
     //generate jwt and send to client
@@ -123,7 +123,52 @@ pub fn quote() -> Template {
     )
 }
 
-#[get("/page/quote_history")]
+#[derive(FromForm)]
+pub struct QuoteData {
+    gallons_requested: String,
+    address: String,
+    delivery_date: String,
+}
+
+#[post("/page/quote", data="<form>")]
+pub async fn quote_submit(pool: &State<Pool<Sqlite>>, form: Form<QuoteData>) -> Template {
+    //TODO: handle quote storage inside of the database.rs file
+    //let quote_request = database::store_quote(pool, &form.gallons_requested, &form.address, &form.delivery_date).await;
+
+    //TODO: error handling
+    /*
+    if quote_request.is_err(){
+        
+    }
+    */
+
+    //TODO: return submission confirmation upon OK
+    //return String::from("<p> Fuel Quote Submitted </p>")
+
+    //renders form results FOR NOW until database implement
+    let form_inp = form.into_inner();
+    Template:: render(
+        "fuel_quote",
+        context!{
+            gallons_requested: form_inp.gallons_requested,
+            address: form_inp.address,
+            delivery_date: form_inp.delivery_date,
+        }
+    )
+}
+
+
+#[get("/page/quote/<id>")]
+pub fn quote_id(id: &str) -> Template {
+    Template:: render(
+        "fuel_quote",
+        context!{
+            curr_id: id
+        }
+    )
+}
+
+#[get("/page/quote/history")]
 pub fn quote_history() -> Template {
     Template::render(
         "fuel_quote_history", 
@@ -181,4 +226,40 @@ mod tests {
             None => panic!("Authorization header not present")
         }
     }
+
+    #[tokio::test]
+    async fn test_quote_id() {
+        let client = Client::tracked(rocket().await).await.expect("valid rocket insance");
+        let response = client.get("/page/quote/1").dispatch().await;
+        assert!(response.status() == Status::Ok);
+        let body = response.into_string().await.unwrap();
+        assert!(body.contains("<p> Current ID: 1 </p>"));
+
+        let response = client.get("/page/quote/2").dispatch().await;
+        assert!(response.status() == Status::Ok);
+        let body = response.into_string().await.unwrap();
+        assert!(body.contains("<p> Current ID: 2 </p>"));        
+    }
+
+    #[tokio::test] 
+    async fn test_quote_history() {
+        // check quote form when user owns no quotes (unable to test right now because of dummy data)
+
+        // check when quote is created
+        let client = Client::tracked(rocket().await).await.expect("valid rocket instance");
+        let response = client.get("/page/quote/history").dispatch().await;
+        assert!(response.status() == Status::Ok);
+        let body = response.into_string().await.unwrap();
+        assert!(body.contains("<a hx-get=\"/page/quote\" hx-target=\"#quote-content\">[+] New Quote</a>"));
+        
+        // make sure new quote appears in history (unable to test rn)
+
+        // check when another quote is created and both quotes are visible
+
+        // check current "history"        
+        assert!(body.contains("<a hx-get=\"/page/quote/1\" hx-target=\"#quote-content\">Quote 1</a>"));
+
+        assert!(body.contains("<a hx-get=\"/page/quote/2\" hx-target=\"#quote-content\">Quote 2</a>"));
+    }
+
 }
