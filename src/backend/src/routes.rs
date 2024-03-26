@@ -245,4 +245,33 @@ mod tests {
         assert!(body.contains("<p> Current ID: 2 </p>"));        
     }
 
+    #[tokio::test] 
+    async fn test_quote_history() {
+        // check quote form when user owns no quotes (unable to test right now because of dummy data)
+
+        // check when quote is created
+        let client = Client::tracked(rocket().await).await.expect("valid rocket instance");
+        let response = client.get("/page/quote/history").dispatch().await;
+        assert!(response.status() == Status::Ok);
+        let body = response.into_string().await.unwrap();
+        assert!(body.contains("<a hx-get=\"/page/quote\" hx-target=\"#quote-content\">[+] New Quote</a>"));
+        
+        // make sure new quote appears in history (unable to test rn)
+
+        // check when another quote is created and both quotes are visible
+
+        // check current "history"        
+        let client = Client::tracked(rocket().await).await.expect("valid rocket instance");
+        let response = client.get("/page/quote/history").dispatch().await;
+        assert!(response.status() == Status::Ok);
+        let body = response.into_string().await.unwrap();
+        assert!(body.contains("<a hx-get=\"/page/quote/1\" hx-target=\"#quote-content\">Quote 1</a>"));
+
+        let client = Client::tracked(rocket().await).await.expect("valid rocket instance");
+        let response = client.get("/page/quote/history").dispatch().await;
+        assert!(response.status() == Status::Ok);
+        let body = response.into_string().await.unwrap();
+        assert!(body.contains("<a hx-get=\"/page/quote/2\" hx-target=\"#quote-content\">Quote 2</a>"));
+    }
+
 }
