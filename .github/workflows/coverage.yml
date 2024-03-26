@@ -1,0 +1,33 @@
+name: coverage
+
+on: [push]
+jobs:
+  test:
+    name: coverage
+    runs-on: ubuntu-latest
+    container:
+      image: xd009642/tarpaulin:develop-nightly
+      options: --security-opt seccomp=unconfined
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Run unit tests & generate code coverage
+        run: |
+          cd src/backend
+          echo 'database_uri = "sqlite://:memory:"\nmax_connections=1' > config.toml # use in-memory database
+          cargo +nightly tarpaulin --verbose --all-features --workspace --timeout 120 --out xml
+     
+      - name: Upload code coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: |
+            src/backend/*.xml
+
+      - name: Verify minimum 80% coverage
+        run: |
+          echo "This is pretty jank, don't be surprised if it breaks..."
+          cd src/backend
+          COVERAGE=$(cat cobertura.xml | sed s/\>/\\n/g | grep -oE -m 1 'line-rate="[0-9](\.[0-9]+)' | cut -c 12-)
+          if [ $(python3 -c "print($COVERAGE>=0.8)") = "False" ]; then echo "Minimum 80% coverage not met"; exit 1; fi

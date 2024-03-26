@@ -180,12 +180,8 @@ pub fn quote_history() -> Template {
 
 #[cfg(test)]
 mod tests {
-    use rocket::{http::{Cookie, CookieJar}, tokio, State};
-    use rocket::local::asynchronous::Client;
-    use rocket::http::Status;
-
-    use crate::rocket;
-    use crate::config::AppConfig;
+    use crate::{rocket, routes::AuthRequest};
+    use rocket::{form::Form, http::{ContentType, Status}, local::asynchronous::Client, tokio, State};
 
     #[tokio::test]
     async fn test_user_creation() {
@@ -205,29 +201,30 @@ mod tests {
 
     #[tokio::test]
     async fn test_user_auth() {
-        let pool = crate::database::init_connection("sqlite://:memory:", 1).await.unwrap();
-        let form = crate::routes::AuthRequest {
-            username: "test".to_string(),
-            password: "test".to_string()
-        };
-        let state = State::from(&pool);
-        let _ = crate::routes::register_request(state, form.into()).await;
-
-        let r = crate::database::register_user(&pool, "test", "test").await;
-        assert!(r.is_ok());
-
-        //authenticate via form
-        let appconf = AppConfig {
-            database_uri: "sqlite://:memory:".to_owned(),
-            max_connections: 1,
-            jwt_secret: "test".to_owned()
-        };
-        let form = crate::routes::AuthRequest {
-            username: "test".to_owned(),
-            password: "test".to_owned()
-        };
-        //TODO: need to figure out how to instantiate a CookieJar from scratch and call the correct request method
-        todo!()
+        //register and log in
+        let client = Client::tracked(rocket().await).await.expect("valid rocket instance");
+        let response = client.post(uri!("/register")).dispatch().await;
+        //this should throw an error as the request did not specify any credentials
+        assert!(response.status() != Status::Ok);
+        let mut request = client.post(uri!("/register"));
+        request = request.header(ContentType::Form);
+        request.set_body(r#"username=test&password=password"#);
+        
+        let response = request.dispatch().await;
+        assert!(response.status() == Status::Ok);
+        
+        // now, try logging in
+        request = client.post(uri!("/login"));
+        request = request.header(ContentType::Form);
+        request.set_body(r#"username=test&password=password"#);
+        
+        let response = request.dispatch().await;
+        assert!(response.status() == Status::Ok);
+        //assert a JWT is present and valid
+        match client.cookies().get("Authorization") {
+            Some(_jwt) => {} //OK, cookie is present,
+            None => panic!("Authorization header not present")
+        }
     }
 
     #[tokio::test]
