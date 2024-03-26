@@ -180,8 +180,45 @@ pub fn quote_history() -> Template {
 
 #[cfg(test)]
 mod tests {
-    use crate::{rocket, routes::AuthRequest};
-    use rocket::{form::Form, http::{ContentType, Status}, local::asynchronous::Client, tokio, State};
+    use crate::{rocket};
+    use rocket::{http::{ContentType, Status}, local::asynchronous::Client, tokio, State};
+
+    #[tokio::test]
+    async fn test_index() {
+        //simple, make sure the index works
+        let client = Client::tracked(rocket().await).await.expect("valid rocket instance");
+        let response = client.get(uri!("/")).dispatch().await;
+        assert!(response.status() == Status::Ok);
+        let body = response.into_string().await.unwrap();
+        //make sure login button is present, which is the default behavior
+        assert!(body.contains("Login / Register"))
+    }
+
+    #[tokio::test]
+    async fn test_index_while_logged_in() {
+        let client = Client::tracked(rocket().await).await.expect("valid rocket instance");
+        // login & register
+        let mut request = client.post(uri!("/register"));
+        request = request.header(ContentType::Form);
+        request.set_body(r#"username=test&password=password"#);
+        
+        let response = request.dispatch().await;
+        assert!(response.status() == Status::Ok);
+        
+        request = client.post(uri!("/login"));
+        request = request.header(ContentType::Form);
+        request.set_body(r#"username=test&password=password"#);
+        let response = request.dispatch().await;
+        assert!(response.status() == Status::Ok);
+
+        let response = client.get(uri!("/")).dispatch().await;
+        assert!(response.status() == Status::Ok);
+        let body = response.into_string().await.unwrap();
+    
+        //make sure login button is NOT present, which indicates we're logged in. also chekc for one of the other buttons
+        assert!(!body.contains("Login / Register"));
+        assert!(body.contains("Fuel Quote History"))
+    }
 
     #[tokio::test]
     async fn test_user_creation() {
@@ -225,8 +262,13 @@ mod tests {
             Some(_jwt) => {} //OK, cookie is present,
             None => panic!("Authorization header not present")
         }
-    }
 
+        //logging out should clear cookies
+        let response = client.get(uri!("/logout")).dispatch().await;
+        assert!(response.status() == Status::SeeOther); //redirects to index
+        assert!(client.cookies().get("Authorization").is_none())
+    }
+    
     #[tokio::test]
     async fn test_quote_id() {
         let client = Client::tracked(rocket().await).await.expect("valid rocket insance");
