@@ -132,27 +132,18 @@ pub struct QuoteData {
 
 #[post("/page/quote", data="<form>")]
 pub async fn quote_submit(pool: &State<Pool<Sqlite>>, form: Form<QuoteData>) -> Template {
-    //TODO: handle quote storage inside of the database.rs file
-    //let quote_request = database::store_quote(pool, &form.gallons_requested, &form.address, &form.delivery_date).await;
-
-    //TODO: error handling
-    /*
-    if quote_request.is_err(){
-        
-    }
-    */
-
     //TODO: return submission confirmation upon OK
     //return String::from("<p> Fuel Quote Submitted </p>")
 
     //renders form results FOR NOW until database implement
-    let form_inp = form.into_inner();
+    //let form_inp = form.into_inner();
+
     Template:: render(
         "fuel_quote",
         context!{
-            gallons_requested: form_inp.gallons_requested,
-            address: form_inp.address,
-            delivery_date: form_inp.delivery_date,
+            gallons_requested: &form.gallons_requested,
+            address: &form.address,
+            delivery_date: &form.delivery_date
         }
     )
 }
@@ -228,8 +219,47 @@ mod tests {
     }
 
     #[tokio::test]
+    async fn test_form_submit(){
+        //test that info can be submitted
+        let client = Client::tracked(rocket().await).await.expect("valid rocket instance");
+        let mut submit = client.post(uri!("/page/quote"));
+        submit = submit.header(ContentType::Form);
+        submit.set_body(r#"gallons_requested=10&address=address1&delivery_date=2024-03-26"#);
+        let response = submit.dispatch().await;
+        assert!(response.status() == Status::Ok);
+    }
+
+    #[tokio::test]
+    async fn test_submit_error(){
+        //test that info when submitted throws error
+        let client = Client::tracked(rocket().await).await.expect("valid rocket instance");
+        let mut submit = client.post(uri!("/page/quote"));
+        submit = submit.header(ContentType::Form);
+
+        //removed gallons_requested
+        submit.set_body(r#"address=address2&delivery_date=2024-03-26"#);
+        let response = submit.clone().dispatch().await;
+        assert!(response.status() != Status::Ok);
+
+        //removed address
+        submit.set_body(r#"gallons_requested=10&delivery_date=2024-03-26"#);
+        let response = submit.clone().dispatch().await;
+        assert!(response.status() != Status::Ok);
+
+        //removed delivery_date
+        submit.set_body(r#"gallons_requested=10&address=address2"#);
+        let response = submit.clone().dispatch().await;
+        assert!(response.status() != Status::Ok);
+        
+        //removed everything
+        submit.set_body(r#""#);
+        let response = submit.clone().dispatch().await;
+        assert!(response.status() != Status::Ok);
+    }
+
+    #[tokio::test]
     async fn test_quote_id() {
-        let client = Client::tracked(rocket().await).await.expect("valid rocket insance");
+        let client = Client::tracked(rocket().await).await.expect("valid rocket instance");
         let response = client.get("/page/quote/1").dispatch().await;
         assert!(response.status() == Status::Ok);
         let body = response.into_string().await.unwrap();
@@ -261,5 +291,4 @@ mod tests {
 
         assert!(body.contains("<a hx-get=\"/page/quote/2\" hx-target=\"#quote-content\">Quote 2</a>"));
     }
-
 }
