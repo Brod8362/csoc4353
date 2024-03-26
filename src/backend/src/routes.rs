@@ -231,10 +231,11 @@ mod tests {
 
     #[tokio::test]
     async fn test_submit_error(){
-        //test that no info throws error
+        //test that info when submitted throws error
         let client = Client::tracked(rocket().await).await.expect("valid rocket instance");
         let mut submit = client.post(uri!("/page/quote"));
         submit = submit.header(ContentType::Form);
+        submit.set_body(r#"gallons_requested=10&address=address2"#);
         let response = submit.dispatch().await;
         assert!(response.status() != Status::Ok);
     }
