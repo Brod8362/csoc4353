@@ -53,3 +53,30 @@ pub fn validate_from_cookie(cookies: &CookieJar<'_>, secret: &[u8]) -> Option<St
         None => None
     }
 }
+
+#[cfg(test)]
+mod test {
+    use std::time::Duration;
+
+    use super::{generate_jwt, validate_jwt};
+
+    #[test]
+    fn test_jwt_generation() {
+        generate_jwt("user_id", Duration::from_secs(60),  b"abcde");
+    }
+
+    #[test]
+    fn test_jwt_validate() {
+        let jwt = generate_jwt("user_id", Duration::from_secs(60),  b"abcde");
+        let user_id_opt = validate_jwt(&jwt, b"abcde");
+        assert!(user_id_opt.is_some());
+        assert!(user_id_opt.unwrap() == "user_id");
+    }
+
+    #[test]
+    fn test_jwt_fails_to_validate_with_incorrect_secret() {
+        let jwt = generate_jwt("user_id", Duration::from_secs(60),  b"abcde");
+        let user_id_opt = validate_jwt(&jwt, b"wrong secret");
+        assert!(user_id_opt.is_none());
+    }
+}
