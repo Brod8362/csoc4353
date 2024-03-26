@@ -108,9 +108,53 @@ pub fn profile() -> Template {
     Template::render(
         "profile_management", 
         context!{
-            
+            // dummy data
+            full_name: "John Doe",
+            address1: "5113 Rainflower Cir S"
+            address2: "5113 Rainflower Cir S"
+            city: "League City"
+            state: "TX"
+            zip: "77573"
         }
     )
+}
+
+#[derive(FromForm)]
+pub struct ProfileData {
+    full_name: String,
+    address1: String,
+    address2: Option<String>,
+    city: String,
+    state: String,
+    zip: String
+}
+
+// profile form submit
+#[post("/page/profile", data="<form>")]
+pub async fn profile_submit(pool: &State<Pool<Sqlite>>, form: Form<ProfileData>) -> Template {
+    let required_fields = vec![&form.full_name, &form.address1, &form.city, &form.state, &form.zip];
+    for field in required_fields {
+        if field.is_empty() {
+            return Template::render(
+                "profile_management",
+                context!{
+                    error: "Missing required fields"
+                }
+            )
+        }
+    } else {
+        if let Some(address2) = &form.address2 {
+            let _ = database::add_profile(pool, &form.full_name, &form.address1, address2, &form.city, &form.state, &form.zip).await;
+        } else {
+            let _ = database::add_profile(pool, &form.full_name, &form.address1, "", &form.city, &form.state, &form.zip).await;
+        }
+        Template::render(
+            "profile_management",
+            context!{
+                message: "Profile updated"
+            }
+        )
+    }
 }
 
 #[get("/page/quote")]
@@ -259,6 +303,32 @@ mod tests {
         assert!(response.status() == Status::SeeOther); //redirects to index
         assert!(client.cookies().get("Authorization").is_none())
     }
+
+    // test profile form submission
+    #[tokio::test]
+    async fn test_profile_submit() {
+        //test that info can be submitted
+        let client = Client::tracked(rocket().await).await.expect("valid rocket instance");
+        let mut submit = client.post(uri!("/page/profile"));
+        submit = submit.header(ContentType::Form);
+        submit.set_body(r#"full_name=John%20Doe&address1=address1&address2=address2&city=city&state=state&zip=zip"#);
+        let response = submit.dispatch().await;
+        assert!(response.status() == Status::Ok);
+    }
+
+    // test profile form submission without address2
+    #[tokio::test]
+    async fn test_profile_submit_no_address2() {
+        //test that info can be submitted
+        let client = Client::tracked(rocket().await).await.expect("valid rocket instance");
+        let mut submit = client.post(uri!("/page/profile"));
+        submit = submit.header(ContentType::Form);
+        submit.set_body(r#"full_name=John%20Doe&address1=address1&city=city&state=state&zip=zip"#);
+        let response = submit.dispatch().await;
+        assert!(response.status() == Status::Ok);
+    }
+
+    // TODO: test the length bounds of the fields
     
     #[tokio::test]
     async fn test_form_submit(){
