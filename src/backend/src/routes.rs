@@ -235,8 +235,25 @@ mod tests {
         let client = Client::tracked(rocket().await).await.expect("valid rocket instance");
         let mut submit = client.post(uri!("/page/quote"));
         submit = submit.header(ContentType::Form);
+
+        //removed gallons_requested
+        submit.set_body(r#"address=address2&delivery_date=2024-03-26"#);
+        let response = submit.clone().dispatch().await;
+        assert!(response.status() != Status::Ok);
+
+        //removed address
+        submit.set_body(r#"gallons_requested=10&delivery_date=2024-03-26"#);
+        let response = submit.clone().dispatch().await;
+        assert!(response.status() != Status::Ok);
+
+        //removed delivery_date
         submit.set_body(r#"gallons_requested=10&address=address2"#);
-        let response = submit.dispatch().await;
+        let response = submit.clone().dispatch().await;
+        assert!(response.status() != Status::Ok);
+        
+        //removed everything
+        submit.set_body(r#""#);
+        let response = submit.clone().dispatch().await;
         assert!(response.status() != Status::Ok);
     }
 
