@@ -132,27 +132,18 @@ pub struct QuoteData {
 
 #[post("/page/quote", data="<form>")]
 pub async fn quote_submit(pool: &State<Pool<Sqlite>>, form: Form<QuoteData>) -> Template {
-    //TODO: handle quote storage inside of the database.rs file
-    //let quote_request = database::store_quote(pool, &form.gallons_requested, &form.address, &form.delivery_date).await;
-
-    //TODO: error handling
-    /*
-    if quote_request.is_err(){
-        
-    }
-    */
-
     //TODO: return submission confirmation upon OK
     //return String::from("<p> Fuel Quote Submitted </p>")
 
     //renders form results FOR NOW until database implement
-    let form_inp = form.into_inner();
+    //let form_inp = form.into_inner();
+
     Template:: render(
         "fuel_quote",
         context!{
-            gallons_requested: form_inp.gallons_requested,
-            address: form_inp.address,
-            delivery_date: form_inp.delivery_date,
+            gallons_requested: &form.gallons_requested,
+            address: &form.address,
+            delivery_date: &form.delivery_date
         }
     )
 }
@@ -180,9 +171,7 @@ pub fn quote_history() -> Template {
 
 #[cfg(test)]
 mod tests {
-    use rocket::{http::{Cookie, CookieJar}, tokio, State};
-    use rocket::local::blocking::Client;
-    use rocket::http::Status;
+    use rocket::{form::Form, http::{ContentType, Status}, local::asynchronous::Client, tokio, State};
 
     use crate::rocket;
     use crate::config::AppConfig;
@@ -231,9 +220,26 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn test_index() {
-        let client = Client::tracked(rocket()).expect("valid rocket instance");
-        let mut response = client.get("/").dispatch();
-        assert_eq!(response.status(), Status::Ok);
+    async fn test_form_submit(){
+        //test that info can be submitted
+        let client = Client::tracked(rocket().await).await.expect("valid rocket instance");
+        let response = client.post(uri!("/page/quote")).dispatch().await;
+        assert!(response.status() == Status::Ok);
+
+        let mut submit = client.post(uri!("/page/quote"));
+        submit = submit.header(ContentType::Form);
+        submit.set_body(r#"gallons_requested=10&address=address1&delivery_date=2024-03-26"#);
+        let response = submit.dispatch().await;
+        assert!(response.status() == Status::Ok);      
+
+        //test that info stored is correct
+        // let submitted = response.into_string().await.unwrap();
+        // assert!(submitted.contains("gallons_requested: 10"))
+    }
+
+    #[tokio::test]
+    async fn test_form_data(){
+        let client = Client::tracked(rocket().await).await.expect("valid rocket instance");
+        let response = client.post(uri!("/page/quote")).dispatch().await;
     }
 }
