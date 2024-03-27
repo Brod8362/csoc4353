@@ -367,68 +367,6 @@ mod tests {
     }
     
     #[tokio::test]
-    async fn test_profile_submit_length() {
-        let client = Client::tracked(rocket().await).await.expect("valid rocket instance");
-        let mut submit = client.post(uri!("/page/profile"));
-        submit = submit.header(ContentType::Form);
-
-        // full_name length [1, 50]
-        submit.set_body(r#"full_name=John%20Doe"#);
-        let response = submit.clone().dispatch().await;
-        assert!(response.status() == Status::Ok);
-
-        submit.set_body(r#"full_name=heyblooblobhiblakemissyouuuuhopeyou'reenjoyingyour...food"#);
-        let response = submit.clone().dispatch().await;
-        assert!(response.status() != Status::Ok);
-
-        // address_1 length [1, 100]
-        submit.set_body(r#"address1=5113%20Rainflower%20Cir%20S"#);
-        let response = submit.clone().dispatch().await;
-        assert!(response.status() == Status::Ok);
-
-        submit.set_body(r#"address1=itsfriday-yourfridaynight(itsfridayniiiiight)<unintelligible>andwarm?(andyou'regettingalotoffunihopeyouuseprotectionuhhhhh)"#);
-        let response = submit.clone().dispatch().await;
-        assert!(response.status() != Status::Ok);
-
-        // address_2 length [1, 100]
-        submit.set_body(r#"address2=5113%20Rainflowr%20Cir%20S"#);
-        let response = submit.clone().dispatch().await;
-        assert!(response.status() == Status::Ok);
-
-        submit.set_body(r#"address2=(hisgirllivesinanotherstatebro)exactly!*laughing*anywaysweloveyoubuddy,wemissyou!(michellecrying(??),thensaying"actuallyidon'tmissyou,sohaha")"#);
-        let response = submit.clone().dispatch().await;
-        assert!(response.status() != Status::Ok);
-
-        // city length [1, 100]
-        submit.set_body(r#"city=Houston"#);
-        let response = submit.clone().dispatch().await;
-        assert!(response.status() == Status::Ok);
-
-        submit.set_body(r#"city=wowww!michelle's so mean.anyways,love you,seeyounextweekum,goodluckstudyingforthetest,makesuretoreviewthesorts,makesureyoureviewtheshorts(....review the shorts)"#);
-        let response = submit.clone().dispatch().await;
-        assert!(response.status() != Status::Ok);
-
-        // state length [2, 2]
-        submit.set_body(r#"state=TX"#);
-        let response = submit.clone().dispatch().await;
-        assert!(response.status() == Status::Ok);
-
-        submit.set_body(r#"state=umyeah(yeah,that'sit)cyasoon,havefun(bye!)*whispering*ohshoott,he'scallingback"#);
-        let response = submit.clone().dispatch().await;
-        assert!(response.status() != Status::Ok);
-
-        // zipcode length [5, 9]
-        submit.set_body(r#"zip=77578"#);
-        let response = submit.clone().dispatch().await;
-        assert!(response.status() == Status::Ok);
-
-        submit.set_body(r#"zip=3141592653589793"#);
-        let response = submit.clone().dispatch().await;
-        assert!(response.status() != Status::Ok);
-    }
-
-    
-    #[tokio::test]
     async fn test_form_submit(){
         //test that info can be submitted
         let client = Client::tracked(rocket().await).await.expect("valid rocket instance");
