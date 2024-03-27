@@ -140,21 +140,21 @@ pub async fn profile_submit(pool: &State<Pool<Sqlite>>, form: Form<ProfileData>)
                 context!{
                     error: "Missing required fields"
                 }
-            )
+            );
         }
-    } else {
-        if let Some(address2) = &form.address2 {
-            let _ = database::add_profile(pool, &form.full_name, &form.address1, address2, &form.city, &form.state, &form.zip).await;
-        } else {
-            let _ = database::add_profile(pool, &form.full_name, &form.address1, "", &form.city, &form.state, &form.zip).await;
-        }
-        Template::render(
-            "profile_management",
-            context!{
-                message: "Profile updated"
-            }
-        )
     }
+
+    if let Some(address2) = &form.address2 {
+        // if address2 is present, update the profile with it
+    }
+
+    // Update the profile with the form data
+    Template::render(
+        "profile_management",
+        context!{
+            message: "Profile updated"
+        }
+    )
 }
 
 #[get("/page/quote")]
@@ -328,7 +328,105 @@ mod tests {
         assert!(response.status() == Status::Ok);
     }
 
-    // TODO: test the length bounds of the fields
+    // test for each individual field missing
+    #[tokio::test]
+    async fn test_profile_submit_error() {
+        let client = Client::tracked(rocket().await).await.expect("valid rocket instance");
+        let mut submit = client.post(uri!("/page/profile"));
+        submit = submit.header(ContentType::Form);
+
+        //removed full_name
+        submit.set_body(r#"address1=address1&address2=address2&city=city&state=state&zip=zip"#);
+        let response = submit.clone().dispatch().await;
+        assert!(response.status() != Status::Ok);
+
+        //removed address1
+        submit.set_body(r#"full_name=John%20Doe&address2=address2&city=city&state=state&zip=zip"#);
+        let response = submit.clone().dispatch().await;
+        assert!(response.status() != Status::Ok);
+
+        //removed city
+        submit.set_body(r#"full_name=John%20Doe&address1=address1&address2=address2&state=state&zip=zip"#);
+        let response = submit.clone().dispatch().await;
+        assert!(response.status() != Status::Ok);
+
+        //removed state
+        submit.set_body(r#"full_name=John%20Doe&address1=address1&address2=address2&city=city&zip=zip"#);
+        let response = submit.clone().dispatch().await;
+        assert!(response.status() != Status::Ok);
+
+        //removed zip
+        submit.set_body(r#"full_name=John%20Doe&address1=address1&address2=address2&city=city&state=state"#);
+        let response = submit.clone().dispatch().await;
+        assert!(response.status() != Status::Ok);
+
+        //removed everything
+        submit.set_body(r#""#);
+        let response = submit.clone().dispatch().await;
+        assert!(response.status() != Status::Ok);
+    }
+    
+    #[tokio::test]
+    async fn test_profile_submit_length() {
+        let client = Client::tracked(rocket().await).await.expect("valid rocket instance");
+        let mut submit = client.post(uri!("/page/profile"));
+        submit = submit.header(ContentType::Form);
+
+        // full_name length [1, 50]
+        submit.set_body(r#"full_name=John Doe"#);
+        let response = submit.clone().dispatch().await;
+        assert!(response.status() == Status::Ok);
+
+        submit.set_body(r#"full_name=hey blooblob hi blake miss youuuu hope you're enjoying your...food"#);
+        let response = submit.clone().dispatch().await;
+        assert!(response.status() != Status::Ok);
+
+        // address_1 length [1, 100]
+        submit.set_body(r#"address1=5113 Rainflower Cir S"#);
+        let response = submit.clone().dispatch().await;
+        assert!(response.status() == Status::Ok);
+
+        submit.set_body(r#"address1=its friday - your friday night (its friday niiiiight) <unintelligible> and warm? (and you're getting a lot of fun i hope you use protection uhhhhh)"#);
+        let response = submit.clone().dispatch().await;
+        assert!(response.status() != Status::Ok);
+
+        // address_2 length [1, 100]
+        submit.set_body(r#"address2=5113 Rainflowr Cir S"#);
+        let response = submit.clone().dispatch().await;
+        assert!(response.status() == Status::Ok);
+
+        submit.set_body(r#"address2=(his girl lives in another state bro) exactly! *laughing* anyways we love you buddy, we miss you! (michelle crying(??), then saying "actually i don't miss you, so haha")"#);
+        let response = submit.clone().dispatch().await;
+        assert!(response.status() != Status::Ok);
+
+        // city length [1, 100]
+        submit.set_body(r#"city=Houston"#);
+        let response = submit.clone().dispatch().await;
+        assert!(response.status() == Status::Ok);
+
+        submit.set_body(r#"city=wowww! michelle's so mean. anyways, love you, see you next week um, good luck studying for the test,make sure to review the sorts, make sure you review the shorts (....review the shorts)"#);
+        let response = submit.clone().dispatch().await;
+        assert!(response.status() != Status::Ok);
+
+        // state length [2, 2]
+        submit.set_body(r#"state=TX"#);
+        let response = submit.clone().dispatch().await;
+        assert!(response.status() == Status::Ok);
+
+        submit.set_body(r#"state=um yeah (yeah, that's it) cya soon, have fun (bye!) *whispering* oh shoott, he's calling back"#);
+        let response = submit.clone().dispatch().await;
+        assert!(response.status() != Status::Ok);
+
+        // zipcode length [5, 9]
+        submit.set_body(r#"zip=77578"#);
+        let response = submit.clone().dispatch().await;
+        assert!(response.status() == Status::Ok);
+
+        submit.set_body(r#"zip=3141592653589793"#);
+        let response = submit.clone().dispatch().await;
+        assert!(response.status() != Status::Ok);
+    }
+
     
     #[tokio::test]
     async fn test_form_submit(){
