@@ -110,10 +110,10 @@ pub fn profile() -> Template {
         context!{
             // dummy data
             full_name: "John Doe",
-            address1: "5113 Rainflower Cir S"
-            address2: "5113 Rainflower Cir S"
-            city: "League City"
-            state: "TX"
+            address1: "5113 Rainflower Cir S",
+            address2: "5113 Rainflower Cir S",
+            city: "League City",
+            state: "TX",
             zip: "77573"
         }
     )
@@ -311,7 +311,7 @@ mod tests {
         let client = Client::tracked(rocket().await).await.expect("valid rocket instance");
         let mut submit = client.post(uri!("/page/profile"));
         submit = submit.header(ContentType::Form);
-        submit.set_body(r#"full_name=John%20Doe&address1=address1&address2=address2&city=city&state=state&zip=zip"#);
+        submit.set_body(r#"full_name=John%20Doe&address1=address1&address2=address2&city=city&state=st&zip=12345"#);
         let response = submit.dispatch().await;
         assert!(response.status() == Status::Ok);
     }
@@ -373,29 +373,29 @@ mod tests {
         submit = submit.header(ContentType::Form);
 
         // full_name length [1, 50]
-        submit.set_body(r#"full_name=John Doe"#);
+        submit.set_body(r#"full_name=John%20Doe"#);
         let response = submit.clone().dispatch().await;
         assert!(response.status() == Status::Ok);
 
-        submit.set_body(r#"full_name=hey blooblob hi blake miss youuuu hope you're enjoying your...food"#);
+        submit.set_body(r#"full_name=heyblooblobhiblakemissyouuuuhopeyou'reenjoyingyour...food"#);
         let response = submit.clone().dispatch().await;
         assert!(response.status() != Status::Ok);
 
         // address_1 length [1, 100]
-        submit.set_body(r#"address1=5113 Rainflower Cir S"#);
+        submit.set_body(r#"address1=5113%20Rainflower%20Cir%20S"#);
         let response = submit.clone().dispatch().await;
         assert!(response.status() == Status::Ok);
 
-        submit.set_body(r#"address1=its friday - your friday night (its friday niiiiight) <unintelligible> and warm? (and you're getting a lot of fun i hope you use protection uhhhhh)"#);
+        submit.set_body(r#"address1=itsfriday-yourfridaynight(itsfridayniiiiight)<unintelligible>andwarm?(andyou'regettingalotoffunihopeyouuseprotectionuhhhhh)"#);
         let response = submit.clone().dispatch().await;
         assert!(response.status() != Status::Ok);
 
         // address_2 length [1, 100]
-        submit.set_body(r#"address2=5113 Rainflowr Cir S"#);
+        submit.set_body(r#"address2=5113%20Rainflowr%20Cir%20S"#);
         let response = submit.clone().dispatch().await;
         assert!(response.status() == Status::Ok);
 
-        submit.set_body(r#"address2=(his girl lives in another state bro) exactly! *laughing* anyways we love you buddy, we miss you! (michelle crying(??), then saying "actually i don't miss you, so haha")"#);
+        submit.set_body(r#"address2=(hisgirllivesinanotherstatebro)exactly!*laughing*anywaysweloveyoubuddy,wemissyou!(michellecrying(??),thensaying"actuallyidon'tmissyou,sohaha")"#);
         let response = submit.clone().dispatch().await;
         assert!(response.status() != Status::Ok);
 
@@ -404,7 +404,7 @@ mod tests {
         let response = submit.clone().dispatch().await;
         assert!(response.status() == Status::Ok);
 
-        submit.set_body(r#"city=wowww! michelle's so mean. anyways, love you, see you next week um, good luck studying for the test,make sure to review the sorts, make sure you review the shorts (....review the shorts)"#);
+        submit.set_body(r#"city=wowww!michelle's so mean.anyways,love you,seeyounextweekum,goodluckstudyingforthetest,makesuretoreviewthesorts,makesureyoureviewtheshorts(....review the shorts)"#);
         let response = submit.clone().dispatch().await;
         assert!(response.status() != Status::Ok);
 
@@ -413,7 +413,7 @@ mod tests {
         let response = submit.clone().dispatch().await;
         assert!(response.status() == Status::Ok);
 
-        submit.set_body(r#"state=um yeah (yeah, that's it) cya soon, have fun (bye!) *whispering* oh shoott, he's calling back"#);
+        submit.set_body(r#"state=umyeah(yeah,that'sit)cyasoon,havefun(bye!)*whispering*ohshoott,he'scallingback"#);
         let response = submit.clone().dispatch().await;
         assert!(response.status() != Status::Ok);
 
