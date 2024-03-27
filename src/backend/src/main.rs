@@ -30,6 +30,7 @@ async fn rocket() -> _ {
                 routes::register_request,
                 routes::logout,
                 routes::profile,
+                routes::profile_submit,
                 routes::quote,
                 routes::quote_id,
                 routes::quote_submit,
